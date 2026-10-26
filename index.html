@@ -257,9 +257,10 @@ function materialsView(){
 
 /* ---------- Online Games (modal list + iframe player) ---------- */
 var ES="https://www.esleschool.com/";
+/* u = link for "Open in new tab". e (optional) = link used inside the page (iframe), for games whose normal page blocks iframes. */
 var GROUPS=[{k:"vocab",t:"Vocabulary Games",d:"Spelling, word meanings, and word building."},{k:"grammar",t:"Grammar Games",d:"Choose the right word, find the mistake, put words in order."}];
 var GAMES=[
-{g:"vocab",t:"Sushi Spell",s:"British Council",l:"All levels",d:"Spell as many words as you can in two minutes.",u:BC+"vocabulary/games/sushi-spell"},
+{g:"vocab",t:"Sushi Spell",s:"British Council",l:"All levels",d:"Spell as many words as you can in two minutes.",u:BC+"vocabulary/games/sushi-spell",e:"https://learnenglish.britishcouncil.org/nsassets/sushi-spell/sushi-spell2.html"},
 {g:"vocab",t:"Wordshake",s:"British Council",l:"All levels",d:"Make words from the letters. Longer words score more. Three minutes.",u:BC+"vocabulary/games/wordshake"},
 {g:"vocab",t:"Word Search",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Find hidden words in a letter grid.",u:ES+"word-search/"},
 {g:"vocab",t:"Flashcards",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Flip cards to learn and test word meanings.",u:ES+"flashcards/"},
@@ -287,7 +288,7 @@ function gmOpen(g,game){
     box=h('div',{class:'gm-box'},h('div',{class:'gm-top'},h('h2',null,grp.t),h('button',{class:'btn small',type:'button',onclick:gmClose},'Close')),
       h('div',{class:'gm-body'},h('p',{class:'hint'},'Tap a game to play it here. If the screen stays blank, tap Open in new tab inside the game.'),items));
   }else{
-    var fr=h('iframe',{class:'gm-frame',src:game.u,title:game.t,allow:'fullscreen; autoplay',sandbox:'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-pointer-lock'});
+    var fr=h('iframe',{class:'gm-frame',src:game.e||game.u,title:game.t,allow:'fullscreen; autoplay',sandbox:'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-pointer-lock'});
     box=h('div',{class:'gm-box'},h('div',{class:'gm-top'},h('button',{class:'btn ghost small',type:'button',onclick:function(){gmOpen(g);}},'← Games'),h('strong',null,game.t),
       h('span',{class:'gm-act'},h('a',{class:'btn gold small',href:game.u,target:'_blank',rel:'noopener noreferrer'},'Open in new tab'),h('button',{class:'btn small',type:'button',onclick:gmClose},'Close'))),
       h('div',{class:'gm-body gm-play'},h('p',{class:'hint'},'Blank screen or "refused to connect"? Tap Open in new tab.'),fr));}
