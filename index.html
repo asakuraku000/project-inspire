@@ -82,6 +82,9 @@ section.view.on{display:block}
 .opt.good{border-color:var(--good);background:var(--good-bg);color:var(--good)}
 .opt.try{border-color:var(--try);background:var(--try-bg);color:var(--try)}
 .opt[disabled]{cursor:default}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.chip.locked{opacity:.55}
+.opt.glow{border-color:var(--gold);box-shadow:0 0 0 4px var(--gold)}
 .fb{margin-top:12px;font-weight:600;min-height:1.2em}
 .fb.good{color:var(--good)}
 .fb.try{color:var(--try)}
@@ -155,10 +158,10 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:3px solid var(--gold);
   padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-.nav-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
-.tab{font:inherit;font-weight:700;font-size:.82rem;text-decoration:none;color:var(--muted);text-align:center;padding:8px 4px;border-radius:10px;min-height:48px;display:flex;flex-direction:column;justify-content:center;line-height:1.2}
-#play iframe{display:block;width:100%;height:calc(100dvh - 82px);border:0;border-radius:12px;background:var(--bg)}
-.tab small{font-weight:600;font-size:.7rem;opacity:.85}
+.nav-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+.tab{font:inherit;font-weight:700;font-size:.74rem;text-decoration:none;color:var(--muted);text-align:center;padding:8px 2px;border-radius:10px;min-height:48px;display:flex;flex-direction:column;justify-content:center;line-height:1.2}
+iframe.embed{display:block;width:100%;height:calc(100dvh - 100px);border:0;border-radius:12px;background:var(--bg)}
+.tab small{font-weight:600;font-size:.64rem;opacity:.85}
 .tab[aria-current="page"]{background:var(--soft);color:var(--accent)}
 @media (min-width:640px){.route{grid-template-columns:1fr 1fr}.route .wide{grid-column:1/-1}}
 @media (prefers-reduced-motion:no-preference){.opt,.btn,.chip{transition:background .15s,border-color .15s}}
@@ -185,7 +188,7 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
           <span class="eyebrow">Games</span>
           <h2>Word lab</h2>
           <p>Match and unscramble words from the story and from real forms.</p>
-          <div class="actions"><a class="btn" href="#wordlab">Play</a><a class="btn ghost" href="#play">More games</a></div>
+          <div class="actions"><a class="btn" href="#wordlab">Play</a><a class="btn ghost" href="#fun">More games</a></div>
         </div>
         <div class="panel wide">
           <span class="eyebrow">After today</span>
@@ -212,6 +215,7 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
     <div class="stack gap-lg">
       <p class="lead">Today's resource is a short story: <b>The Road Is Still Open</b>. Do the four steps in order.</p>
       <div class="tabs-in" id="labsteps" role="tablist" aria-label="Lab steps"></div>
+      <p class="warn" id="lockmsg" role="status" hidden></p>
 
       <!-- 1 words -->
       <div class="panel lab-pane" data-pane="0">
@@ -219,6 +223,7 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
         <p class="hint">Read the line from the story. Then pick the meaning.</p>
         <div id="a-words"></div>
         <div class="actions"><button class="btn ghost" data-go="1">Next: Read and listen</button></div>
+        <p class="hint" id="lock0" style="margin-top:8px">Answer every question correctly to unlock the next step.</p>
       </div>
 
       <!-- 2 read/listen -->
@@ -310,7 +315,7 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
       <div class="panel cream">
         <h2>More games</h2>
         <p class="hint">Hub words, search words, follow directions, find the sentence, plus free online games with sound and stars.</p>
-        <div class="actions"><a class="btn gold" href="#play">Play more games</a></div>
+        <div class="actions"><a class="btn gold" href="#fun">Play more games</a></div>
       </div>
     </div>
   </section>
@@ -379,7 +384,7 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
       <div class="panel soft">
         <h2>Free worksheets and PDFs</h2>
         <p>Search free reading, listening, grammar and printable worksheets. Tap Download PDF to save one on your phone.</p>
-        <div class="actions"><a class="btn" href="#play">Search free files</a></div>
+        <div class="actions"><a class="btn" href="#materials">Search free files</a></div>
       </div>
 
       <h2>More free resources</h2>
@@ -388,9 +393,12 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
       <div class="warn">Stay safe: official sites end in <b>.gov.ph</b>. e-TESDA courses are free and ALS programs do not collect fees. If someone asks you to pay to enroll, check first with your barangay or the DepEd or TESDA office.</div>
     </div>
   </section>
-  <!-- PLAY: games, effects, free files + search (from index.html) -->
-  <section class="view" id="play">
-    <iframe title="Games and free files" loading="lazy" allow="autoplay; fullscreen" srcdoc="&lt;!doctype html&gt;
+  <!-- FREE MATERIALS (searchable PDFs and links, from index.html) -->
+  <section class="view" id="materials"><iframe class="embed" id="frame-materials" title="Free materials and worksheets" allow="autoplay; fullscreen"></iframe></section>
+
+  <!-- OTHER FUN GAMES (practice activities + online games, from index.html) -->
+  <section class="view" id="fun"><iframe class="embed" id="frame-fun" title="Other fun games" allow="autoplay; fullscreen"></iframe></section>
+  <textarea id="idxsrc" hidden aria-hidden="true">&lt;!doctype html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
 &lt;meta charset=&quot;utf-8&quot;&gt;
@@ -571,7 +579,7 @@ wordBank:[&quot;option&quot;,&quot;opportunity&quot;,&quot;schedule&quot;,&quot;
 ]};
 /* ===================== END OF EDIT AREA ===================== */
 
-var app=document.getElementById(&#x27;app&#x27;),state={view:&#x27;home&#x27;,s:0,a:0,fac:false},progress=loadProgress(),audio=null;
+var app=document.getElementById(&#x27;app&#x27;),state={view:window.__START===&#x27;materials&#x27;?&#x27;materials&#x27;:&#x27;home&#x27;,s:0,a:0,fac:false},progress=loadProgress(),audio=null;
 function loadProgress(){var out={};try{var raw=localStorage.getItem(&#x27;inspireProgress&#x27;);if(raw){var p=JSON.parse(raw);
   if(p&amp;&amp;typeof p===&#x27;object&#x27;)for(var k in p){var v=p[k];if(v&amp;&amp;typeof v.earned===&#x27;number&#x27;&amp;&amp;typeof v.total===&#x27;number&#x27;)out[k]={earned:v.earned,total:v.total};}}}catch(e){}return out;}
 function saveProgress(){try{localStorage.setItem(&#x27;inspireProgress&#x27;,JSON.stringify(progress));}catch(e){}}
@@ -643,16 +651,16 @@ function materialsView(){
   var input=h(&#x27;input&#x27;,{id:&#x27;m-q&#x27;,type:&#x27;search&#x27;,placeholder:&#x27;Search: reading, grammar, job, pdf...&#x27;,autocomplete:&#x27;off&#x27;,&#x27;aria-label&#x27;:&#x27;Search materials&#x27;,value:mq,oninput:function(e){mq=e.target.value;draw();}});
   draw();
   return [header(&#x27;Online Materials&#x27;,&#x27;Free Materials &amp; Worksheets&#x27;,&#x27;Search, then tap Open or Download. All links are free.&#x27;),
-    h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;home&#x27;);}},&#x27;← Home&#x27;),
-    h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;games&#x27;);}},&#x27;Looking for games? Open Games →&#x27;),h(&#x27;div&#x27;,{class:&#x27;field&#x27;},h(&#x27;label&#x27;,{for:&#x27;m-q&#x27;},&#x27;Search materials&#x27;),input),chips,count,
+    window.__START===&#x27;materials&#x27;?null:h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;home&#x27;);}},&#x27;← Home&#x27;),
+    window.__START===&#x27;materials&#x27;?null:h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;games&#x27;);}},&#x27;Looking for games? Open Games →&#x27;),h(&#x27;div&#x27;,{class:&#x27;field&#x27;},h(&#x27;label&#x27;,{for:&#x27;m-q&#x27;},&#x27;Search materials&#x27;),input),chips,count,
     h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},&#x27;You need internet. Save a PDF on your phone to use it offline. Websites can change, so the facilitator checks the links before the session.&#x27;),list];}
 
 /* ---------- Online Games (modal list + iframe player) ---------- */
 var ES=&quot;https://www.esleschool.com/&quot;;
 var GROUPS=[{k:&quot;vocab&quot;,t:&quot;Vocabulary Games&quot;,d:&quot;Spelling, word meanings, and word building.&quot;},{k:&quot;grammar&quot;,t:&quot;Grammar Games&quot;,d:&quot;Choose the right word, find the mistake, put words in order.&quot;}];
 var GAMES=[
-{g:&quot;vocab&quot;,t:&quot;Sushi Spell&quot;,s:&quot;British Council&quot;,l:&quot;All levels&quot;,d:&quot;Spell as many words as you can in two minutes.&quot;,u:BC+&quot;vocabulary/games/sushi-spell&quot;},
-{g:&quot;vocab&quot;,t:&quot;Wordshake&quot;,s:&quot;British Council&quot;,l:&quot;All levels&quot;,d:&quot;Make words from the letters. Longer words score more. Three minutes.&quot;,u:BC+&quot;vocabulary/games/wordshake&quot;},
+{g:&quot;vocab&quot;,t:&quot;Sushi Spell&quot;,s:&quot;British Council&quot;,l:&quot;All levels&quot;,d:&quot;Spell as many words as you can in two minutes.&quot;,u:&quot;https://learnenglish.britishcouncil.org/nsassets/sushi-spell/sushi-spell2.html&quot;},
+{g:&quot;vocab&quot;,t:&quot;Wordshake&quot;,s:&quot;British Council&quot;,l:&quot;All levels&quot;,d:&quot;Make words from the letters. Longer words score more. Three minutes.&quot;,u:&quot;https://learnenglish.britishcouncil.org/nsassets/wordshake-adults/Wordshake_Adult.html&quot;},
 {g:&quot;vocab&quot;,t:&quot;Word Search&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Find hidden words in a letter grid.&quot;,u:ES+&quot;word-search/&quot;},
 {g:&quot;vocab&quot;,t:&quot;Flashcards&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Flip cards to learn and test word meanings.&quot;,u:ES+&quot;flashcards/&quot;},
 {g:&quot;vocab&quot;,t:&quot;Crossword&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Read the clue and type the word.&quot;,u:ES+&quot;crossword/&quot;},
@@ -698,8 +706,8 @@ function homeView(){
       h(&#x27;ul&#x27;,null,ses.activities.map(function(act,ai){var p=progress[key(si,ai)];return h(&#x27;li&#x27;,null,h(&#x27;span&#x27;,null,act.title),p?stars(p.earned,p.total):h(&#x27;span&#x27;,{class:&#x27;count&#x27;},act.minutes+&#x27; min&#x27;));})),
       h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;+(si%2?&#x27; gold&#x27;:&#x27;&#x27;),type:&#x27;button&#x27;,onclick:function(){go(&#x27;session&#x27;,si);}},&#x27;Open activities&#x27;)));});
   cards.push(h(&#x27;section&#x27;,{class:&#x27;card cream&#x27;},h(&#x27;span&#x27;,{class:&#x27;kicker&#x27;},&#x27;Play more&#x27;),h(&#x27;h2&#x27;,null,&#x27;Online Games&#x27;),h(&#x27;p&#x27;,null,&#x27;Free vocabulary and grammar games. Play right here.&#x27;),h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn gold&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;games&#x27;);}},&#x27;Open Games&#x27;))));
-  cards.push(h(&#x27;section&#x27;,{class:&#x27;card&#x27;},h(&#x27;span&#x27;,{class:&#x27;kicker&#x27;},&#x27;After the training&#x27;),h(&#x27;h2&#x27;,null,&#x27;Free Materials &amp; Worksheets&#x27;),h(&#x27;p&#x27;,null,&#x27;Search free reading, listening, grammar and worksheet links you can use anytime.&#x27;),h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;materials&#x27;);}},&#x27;Open Materials&#x27;))));
-  return [header(&#x27;Project INSPIRE&#x27;,CONTENT.home.title,CONTENT.home.text),h(&#x27;div&#x27;,{class:&#x27;cards&#x27;},cards)];}
+  if(window.__START!==&#x27;fun&#x27;)cards.push(h(&#x27;section&#x27;,{class:&#x27;card&#x27;},h(&#x27;span&#x27;,{class:&#x27;kicker&#x27;},&#x27;After the training&#x27;),h(&#x27;h2&#x27;,null,&#x27;Free Materials &amp; Worksheets&#x27;),h(&#x27;p&#x27;,null,&#x27;Search free reading, listening, grammar and worksheet links you can use anytime.&#x27;),h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;materials&#x27;);}},&#x27;Open Materials&#x27;))));
+  return [header(&#x27;Project INSPIRE&#x27;,window.__START===&#x27;fun&#x27;?&#x27;Other Fun Games&#x27;:CONTENT.home.title,CONTENT.home.text),h(&#x27;div&#x27;,{class:&#x27;cards&#x27;},cards)];}
 function sessionView(ses){
   var rows=ses.activities.map(function(act,ai){var p=progress[key(state.s,ai)];
     return h(&#x27;button&#x27;,{class:&#x27;row&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;activity&#x27;,state.s,ai);}},
@@ -1013,8 +1021,7 @@ ensureBtn();
 })();
 &lt;/script&gt;
 &lt;/html&gt;
-"></iframe>
-  </section>
+</textarea>
 </div>
 
 <nav class="nav" aria-label="Hub sections"><div class="nav-in">
@@ -1022,7 +1029,8 @@ ensureBtn();
   <a class="tab" href="#lab" data-tab="lab">Lab<small>Read, Listen</small></a>
   <a class="tab" href="#wordlab" data-tab="wordlab">Word lab<small>Games</small></a>
   <a class="tab" href="#library" data-tab="library">Library</a>
-  <a class="tab" href="#play" data-tab="play">Play<small>Games, Files</small></a>
+  <a class="tab" href="#materials" data-tab="materials">Free Materials</a>
+  <a class="tab" href="#fun" data-tab="fun">Other Fun Games</a>
 </div></nav>
 
 <script>
@@ -1046,13 +1054,17 @@ ensureBtn();
     var n=STAMPS.filter(function(s){return isDone(s[0])}).length;
     $$('.stampcount').forEach(function(e){e.textContent=n+' of '+STAMPS.length+' stamps'});
     $$('.chip[data-stamp]').forEach(function(c){c.classList.toggle('done',isDone(c.dataset.stamp))});
+    if(typeof updateLocks==='function')updateLocks();
   }
   function stamp(k){if(!stamps[k]){stamps[k]=true;store.set('stamps',stamps)}renderStamps()}
 
   /* ---------- routing ---------- */
-  var VIEWS=['home','lab','wordlab','library','play'];
+  var VIEWS=['home','lab','wordlab','library','materials','fun'];
+  var IDX=null;
+  function lazyFrame(v){var f=document.getElementById('frame-'+v);if(!f||f.srcdoc)return;IDX=IDX||document.getElementById('idxsrc').value;
+    f.srcdoc=IDX.replace('<div id="app" class="shell"></div>','<script>window.__START="'+v+'"<\/script><div id="app" class="shell"></div>')}
   function route(){
-    var h=(location.hash||'#home').slice(1);if(VIEWS.indexOf(h)<0)h='home';
+    var h=(location.hash||'#home').slice(1);if(h==='play')h='fun';if(VIEWS.indexOf(h)<0)h='home';lazyFrame(h);
     VIEWS.forEach(function(v){$('#'+v).classList.toggle('on',v===h)});
     $$('.tab').forEach(function(t){if(t.dataset.tab===h)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current')});
     if(h!=='lab'&&window.speechSynthesis){try{speechSynthesis.cancel()}catch(e){}resetListen()}
@@ -1102,7 +1114,20 @@ ensureBtn();
   var labIdx=0;
   var stepsEl=$('#labsteps');
   stepsEl.innerHTML=LABS.map(function(s,i){return '<button class="chip" data-i="'+i+'" data-stamp="'+s[1]+'">'+(i+1)+'. '+s[0]+'</button>'}).join('');
+  /* A step opens only after the one before it is finished (all answers correct). */
+  var NEED=[null,'words','read','check'];
+  var LOCKMSG=['','Answer every Step 1 question correctly to unlock Read and listen.','Read all 5 parts to unlock Check. Answer each Pause and predict question to keep going.','Answer every Check question correctly to unlock Respond.'];
+  function can(i){return i===0||isDone(NEED[i])}
+  function updateLocks(){
+    if(!stepsEl)return;
+    $$('.chip[data-i]',stepsEl).forEach(function(c){var i=+c.dataset.i,ok=can(i);c.classList.toggle('locked',!ok);c.setAttribute('aria-disabled',ok?'false':'true');c.textContent=(ok?'':'🔒 ')+(i+1)+'. '+LABS[i][0]});
+    $$('[data-go]').forEach(function(b){b.disabled=!can(+b.dataset.go)});
+    var l0=$('#lock0');if(l0)l0.hidden=can(1);
+  }
   function showPane(i){
+    var lm=$('#lockmsg');
+    if(!can(i)){lm.textContent='🔒 '+LOCKMSG[i];lm.hidden=false;return}
+    lm.hidden=true;
     labIdx=i;
     $$('.lab-pane').forEach(function(p){p.hidden=(+p.dataset.pane!==i)});
     $$('.chip[data-i]').forEach(function(c){if(+c.dataset.i===i)c.setAttribute('aria-current','step');else c.removeAttribute('aria-current')});
@@ -1182,15 +1207,17 @@ ensureBtn();
     $('#prevPart').disabled=partIdx===0;
     var nb=$('#nextPart');
     nb.textContent=partIdx===PARTS.length-1?'I finished reading':'Next part';
+    nb.disabled=!!(P.p&&picks[partIdx]==null);
     var pr=$('#predict');pr.innerHTML='';
     if(P.p){
       pr.innerHTML='<div class="predict"><p class="q">Pause and predict: '+P.p.q+'</p><div class="row">'+
         P.p.o.map(function(t,k){return '<button class="chip'+(picks[partIdx]===k?' pick':'')+'" data-k="'+k+'">'+t+'</button>'}).join('')+
-        '</div><p class="hint" id="pmsg" style="margin-top:8px">'+(picks[partIdx]!=null?'Good guess! Read the next part to find out.':'There is no wrong guess. Tap one.')+'</p></div>';
+        '</div><p class="hint" id="pmsg" style="margin-top:8px">'+(picks[partIdx]!=null?'Good guess! Read the next part to find out.':'There is no wrong guess. Tap one to unlock the next part.')+'</p></div>';
       $$('.chip',pr).forEach(function(c){c.addEventListener('click',function(){
         picks[partIdx]=+c.dataset.k;store.set('picks',picks);
         $$('.chip',pr).forEach(function(x){x.classList.toggle('pick',x===c)});
         $('#pmsg').textContent='Good guess! Read the next part to find out.';
+        nb.disabled=false;
       })});
     }
     stopListen();
@@ -1198,6 +1225,7 @@ ensureBtn();
   }
   $('#prevPart').addEventListener('click',function(){if(partIdx>0){partIdx--;renderPart();window.scrollTo(0,0)}});
   $('#nextPart').addEventListener('click',function(){
+    if(PARTS[partIdx].p&&picks[partIdx]==null)return;
     if(partIdx<PARTS.length-1){partIdx++;renderPart();window.scrollTo(0,0)}
     else{stamp('read');showPane(2);window.scrollTo(0,0)}
   });
@@ -1235,7 +1263,7 @@ ensureBtn();
     {q:'What did Luca write on the paper after the phone call?',opts:['I can still try.','I am too old.','Maybe next year.'],correct:0,why:'He wrote it at the bottom, under the schedule, requirements, place, and contact person.'},
     {q:'Which line shows that Luca is changing how he sees himself?',opts:['“Not anymore.”','“Maybe tomorrow.”','“Completed junior high school; currently seeking opportunities to continue learning.”'],correct:2,why:'The facts were the same, but he chose to describe what he can still do.',hint:'Look for the line he wrote on the form after he crossed out "I stopped school."'},
     {q:'What does “the road is still open” mean to you?',opts:['I can still learn and move forward.','It is never too late to try again.','Someone is waiting to help me.'],opinion:true,why:'There is no wrong answer here. Share yours with your group.'}
-  ],{label:'the check',onDone:function(){stamp('check')}});
+  ],{label:'the check',onDone:function(){stamp('check');var a=$('#a-check .actions'),b=document.createElement('button');b.className='btn';b.textContent='Next: Respond';b.addEventListener('click',function(){showPane(3);window.scrollTo(0,0)});a.appendChild(b)}});
 
   /* ---------- respond ---------- */
   var ids=['r1','r2','r3','r4'];
@@ -1295,14 +1323,19 @@ ensureBtn();
   (function(){
     var root=$('#g-match');
     function round(){
-      var set=shuffle(W).slice(0,6),words=shuffle(set),means=shuffle(set),selW=null,done=0;
-      root.innerHTML='<div class="cols"><div class="stack" style="gap:8px" id="cw"></div><div class="stack" style="gap:8px" id="cm"></div></div><div class="fb" id="mfb" aria-live="polite"></div><div class="actions" id="mact"></div>';
+      var set=shuffle(W).slice(0,6),words=shuffle(set),means=shuffle(set),selW=null,done=0,stage=0;
+      root.innerHTML='<div class="cols"><div class="stack" style="gap:8px" id="cw"></div><div class="stack" style="gap:8px" id="cm"></div></div><div class="fb" id="mfb" aria-live="polite"></div><div class="actions" id="mact"><button class="btn ghost" id="mhint">Hint</button></div>';
       words.forEach(function(w){var b=document.createElement('button');b.className='opt';b.textContent=w[0];b._w=w;$('#cw',root).appendChild(b)});
       means.forEach(function(w){var b=document.createElement('button');b.className='opt';b.textContent=w[1];b._w=w;$('#cm',root).appendChild(b)});
       var fb=$('#mfb',root);
+      $('#mhint',root).addEventListener('click',function(){
+        if(!selW){var nb=$$('#cw .opt:not(.good)',root)[0];if(!nb)return;selW=nb;stage=0;nb.classList.add('sel')}
+        if(stage===0){stage=1;fb.className='fb';fb.textContent='Hint: in Filipino, "'+selW._w[2]+'". Which meaning fits? Tap Hint again for more help.'}
+        else{$$('#cm .opt',root).forEach(function(m){if(m._w===selW._w&&!m.disabled){m.classList.add('glow');setTimeout(function(){m.classList.remove('glow')},2500)}});fb.className='fb';fb.textContent='Look at the glowing meaning.'}
+      });
       $$('#cw .opt',root).forEach(function(b){b.addEventListener('click',function(){
         $$('#cw .opt',root).forEach(function(x){x.classList.remove('sel')});
-        selW=b;b.classList.add('sel');fb.className='fb';fb.textContent='Now tap the meaning.';
+        selW=b;stage=0;b.classList.add('sel');fb.className='fb';fb.textContent='Now tap the meaning.';
       })});
       $$('#cm .opt',root).forEach(function(m){m.addEventListener('click',function(){
         if(!selW){fb.className='fb try';fb.textContent='Tap a word first.';return}
@@ -1336,10 +1369,18 @@ ensureBtn();
         '<div class="boxes" aria-label="Your answer">'+boxes+'</div>'+
         '<div class="tiles" style="margin-top:14px">'+tiles.map(function(c,i){return '<button class="tile" data-i="'+i+'"'+(ans.indexOf(i)>=0?' disabled':'')+'>'+c+'</button>'}).join('')+'</div>'+
         '<div class="fb" id="sfb" aria-live="polite"></div>'+
-        '<div class="actions"><button class="btn ghost" id="sback">Undo</button><button class="btn ghost" id="sclear">Clear</button></div>';
+        '<div class="actions"><button class="btn ghost" id="shint">Hint</button><button class="btn ghost" id="sback">Undo</button><button class="btn ghost" id="sclear">Clear</button></div>';
       $$('.tile',root).forEach(function(b){b.addEventListener('click',function(){
         ans.push(+b.dataset.i);draw(it);if(ans.length===word.length)check(it);
       })});
+      $('#shint',root).addEventListener('click',function(){
+        if(!ans.every(function(t,i){return tiles[t]===word[i]}))ans=[];
+        var need=word[ans.length];
+        for(var i=0;i<tiles.length;i++)if(ans.indexOf(i)<0&&tiles[i]===need){ans.push(i);break}
+        draw(it);
+        if(ans.length===word.length)check(it);
+        else{var f=$('#sfb',root);f.className='fb';f.textContent='Hint: the next letter is "'+word[ans.length-1]+'". Keep going!'}
+      });
       $('#sback',root).addEventListener('click',function(){ans.pop();draw(it)});
       $('#sclear',root).addEventListener('click',function(){ans=[];draw(it)});
     }
