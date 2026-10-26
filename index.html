@@ -164,7 +164,9 @@ iframe.embed{display:block;width:100%;height:calc(100dvh - 100px);border:0;borde
 .tab small{font-weight:600;font-size:.64rem;opacity:.85}
 .tab[aria-current="page"]{background:var(--soft);color:var(--accent)}
 @media (min-width:640px){.route{grid-template-columns:1fr 1fr}.route .wide{grid-column:1/-1}}
-@media (prefers-reduced-motion:no-preference){.opt,.btn,.chip{transition:background .15s,border-color .15s}}
+@media (prefers-reduced-motion:no-preference){.opt,.btn,.chip{transition:background .15s,border-color .15s}
+  #fun.on{animation:funIn .4s ease-out both}}
+@keyframes funIn{from{opacity:0}to{opacity:1}}
 </style>
 
 <div class="wrap">
@@ -878,7 +880,7 @@ render();
 &lt;script&gt;
 (function(){
 &#x27;use strict&#x27;;
-var app=document.getElementById(&#x27;app&#x27;); if(!app) return;
+var app=document.getElementById(&#x27;app&#x27;); if(!app||window.__START!==&#x27;fun&#x27;) return;
 var on=true; try{on=localStorage.getItem(&#x27;inspireSound&#x27;)!==&#x27;off&#x27;}catch(e){}
 var calm=matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;).matches;
 var ac=null, combo=0, px=innerWidth/2, py=innerHeight/2, snap=null, tEl=null;
@@ -888,28 +890,29 @@ var css=&#x27;\
 @keyframes fxrise{from{opacity:0;transform:translateY(26px) scale(.93)}60%{transform:translateY(-5px) scale(1.02)}to{opacity:1;transform:none}}\
 @keyframes fxpop{0%{transform:scale(1)}40%{transform:scale(1.09)}70%{transform:scale(.97)}100%{transform:scale(1)}}\
 @keyframes fxstar{0%{transform:scale(0) rotate(-140deg);opacity:0}70%{transform:scale(1.55) rotate(14deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}\
-@keyframes fxbob{50%{transform:translateY(-6px)}}\
 @keyframes fxgrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}\
 @keyframes fxtoast{0%{transform:translate(-50%,40px) scale(.6);opacity:0}15%{transform:translate(-50%,0) scale(1.14);opacity:1}25%{transform:translate(-50%,0) scale(1)}80%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-12px);opacity:0}}\
 #fx-toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);opacity:0;background:var(--gold);color:var(--on-gold);font:800 1.2rem var(--font-display);padding:.7rem 1.3rem;border-radius:999px;box-shadow:0 12px 26px -8px var(--shadow);z-index:100;pointer-events:none;white-space:nowrap}\
 #fx-toast.show{animation:fxtoast 1.5s both}\
 .done .star{animation:fxstar .6s cubic-bezier(.34,1.56,.64,1) both}\
 @media (prefers-reduced-motion:no-preference){\
-.shell&gt;*{animation:fxrise .55s both}\
-.shell&gt;*:nth-child(2){animation-delay:.05s}.shell&gt;*:nth-child(3){animation-delay:.1s}.shell&gt;*:nth-child(4){animation-delay:.15s}.shell&gt;*:nth-child(5){animation-delay:.2s}.shell&gt;*:nth-child(6){animation-delay:.25s}\
-.cards&gt;*,.rows&gt;*{animation:fxrise .6s both}\
-.cards&gt;*:nth-child(2),.rows&gt;*:nth-child(2){animation-delay:.1s}.rows&gt;*:nth-child(3){animation-delay:.18s}.rows&gt;*:nth-child(4){animation-delay:.26s}.rows&gt;*:nth-child(5){animation-delay:.34s}\
-.pill{animation:fxbob 2.6s ease-in-out infinite}\
-.rule{transform-origin:left;animation:fxgrow .7s .2s both}\
-.done h2{animation:fxbob 1.5s ease-in-out infinite}\
+.shell.fxgo&gt;*{animation:fxrise .55s both}\
+.shell.fxgo&gt;*:nth-child(2){animation-delay:.05s}.shell.fxgo&gt;*:nth-child(3){animation-delay:.1s}.shell.fxgo&gt;*:nth-child(4){animation-delay:.15s}.shell.fxgo&gt;*:nth-child(5){animation-delay:.2s}.shell.fxgo&gt;*:nth-child(6){animation-delay:.25s}\
+.fxgo .cards&gt;*,.fxgo .rows&gt;*{animation:fxrise .6s both}\
+.fxgo .cards&gt;*:nth-child(2),.fxgo .rows&gt;*:nth-child(2){animation-delay:.1s}.fxgo .rows&gt;*:nth-child(3){animation-delay:.18s}.fxgo .rows&gt;*:nth-child(4){animation-delay:.26s}.fxgo .rows&gt;*:nth-child(5){animation-delay:.34s}\
+.fxgo .rule{transform-origin:left;animation:fxgrow .7s .2s both}\
 .btn,.opt,.tile,.chip,.row,.toggle{transition:transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s}\
 .btn:active,.opt:active:not(:disabled),.tile:active:not(:disabled),.chip:active,.row:active,.toggle:active{transform:scale(.93)}\
 .opt.good,.feedback.good,.tile.sel{animation:fxpop .45s}\
 .feedback.bad{animation:fxpop .35s}\
-.total .star{animation:fxbob 1.8s ease-in-out infinite}\
 }\
 @media (hover:hover) and (prefers-reduced-motion:no-preference){.btn:hover,.row:hover,.opt:hover:not(:disabled),.tile:hover:not(:disabled){transform:translateY(-3px)}}&#x27;;
 var st=document.createElement(&#x27;style&#x27;); st.textContent=css; document.head.appendChild(st);
+/* ---------- visit transition: plays each time this tab is opened ---------- */
+var fxT=null;
+function replay(){app.classList.remove(&#x27;fxgo&#x27;);void app.offsetWidth;app.classList.add(&#x27;fxgo&#x27;);clearTimeout(fxT);fxT=setTimeout(function(){app.classList.remove(&#x27;fxgo&#x27;)},1600)}
+window.addEventListener(&#x27;message&#x27;,function(e){if(e.data===&#x27;inspire:replay&#x27;)replay()});
+replay();
 
 /* ---------- sound ---------- */
 function unlock(){
@@ -1068,6 +1071,7 @@ ensureBtn();
     VIEWS.forEach(function(v){$('#'+v).classList.toggle('on',v===h)});
     $$('.tab').forEach(function(t){if(t.dataset.tab===h)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current')});
     if(h!=='lab'&&window.speechSynthesis){try{speechSynthesis.cancel()}catch(e){}resetListen()}
+    if(h==='fun'){try{var ff=document.getElementById('frame-fun');if(ff.contentWindow)ff.contentWindow.postMessage('inspire:replay','*')}catch(e){}}
     window.scrollTo(0,0);
   }
   window.addEventListener('hashchange',route);
