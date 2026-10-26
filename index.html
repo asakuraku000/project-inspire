@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>INSPIRE Hub Games</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lexend:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F5F8FE;--surface:#FFFFFF;--ink:#0D1A4A;--muted:#47557F;--primary:#12338F;--on-primary:#FFFFFF;--accent:#12338F;--gold:#F3B62B;--on-gold:#2A1E00;--gold-soft:#FFF4D6;--blue-soft:#E6EFFF;--line:#CBD6F0;--focus:#12338F;--star-off:#D3DBF1;--shadow:rgba(18,51,143,.28);--good:#13663F;--good-soft:#D9F2E4;--bad:#A12A18;--bad-soft:#FBE2DC;--font-display:'Bricolage Grotesque','Lexend',system-ui,sans-serif;--font-body:'Lexend',system-ui,-apple-system,'Segoe UI',sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1230;--surface:#131F4A;--ink:#EAF0FF;--muted:#A5B4E3;--primary:#3F65DB;--accent:#A9C0FF;--gold-soft:#33290C;--blue-soft:#15245A;--line:#2B3D7C;--focus:#F3B62B;--star-off:#2B3D7C;--shadow:rgba(0,0,0,.5);--good:#7BE0A9;--good-soft:#12382A;--bad:#FFA392;--bad-soft:#40201B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1230;--surface:#131F4A;--ink:#EAF0FF;--muted:#A5B4E3;--primary:#3F65DB;--accent:#A9C0FF;--gold-soft:#33290C;--blue-soft:#15245A;--line:#2B3D7C;--focus:#F3B62B;--star-off:#2B3D7C;--shadow:rgba(0,0,0,.5);--good:#7BE0A9;--good-soft:#12382A;--bad:#FFA392;--bad-soft:#40201B;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--font-body);-webkit-text-size-adjust:100%}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3{font-family:var(--font-display);margin:0;line-height:1.1;text-wrap:balance;color:var(--accent)}
+h1{font-size:clamp(1.9rem,7vw,2.8rem);font-weight:800;letter-spacing:-.01em}h2{font-size:1.45rem;font-weight:800}h3{font-size:1.15rem;font-weight:600}p{margin:0}
+.shell{max-width:46rem;margin:0 auto;padding-block:20px 48px;display:grid;gap:22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.head{display:grid;gap:14px}.bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between}
+.pill{background:var(--primary);color:var(--on-primary);font-weight:600;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;padding:.6rem .95rem;border-radius:8px;box-shadow:0 4px 10px -6px var(--shadow)}
+.tools{display:flex;align-items:center;gap:10px}.rule{height:4px;border-radius:2px;background:var(--gold)}.sub{color:var(--muted);max-width:38rem}
+.foot{color:var(--muted);font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;padding-top:6px}
+.toggle{min-height:40px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--surface);font-size:.85rem;font-weight:500}
+.toggle[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}
+.total{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.95rem}
+.link{background:none;border:0;padding:8px 0;min-height:44px;color:var(--accent);font-weight:600;text-align:left;justify-self:start}
+.btn{min-height:50px;padding:0 22px;border-radius:10px;border:2px solid transparent;background:var(--primary);color:var(--on-primary);font-weight:600}
+.btn.gold{background:var(--gold);color:var(--on-gold)}.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}.btn.small{min-height:42px;padding:0 14px;font-size:.88rem}
+.btns{display:flex;flex-wrap:wrap;gap:10px}.cards{display:grid;gap:18px}
+.card{background:var(--blue-soft);border-radius:18px;padding:22px;display:grid;gap:14px;box-shadow:0 10px 24px -16px var(--shadow)}.card.cream{background:var(--gold-soft)}
+.card .kicker{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.card ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.92rem}.card li{display:flex;gap:10px;align-items:center;justify-content:space-between}.card li span:first-child{min-width:0}
+.rows{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;min-height:72px;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);text-align:left}
+.row .n{width:38px;height:38px;border-radius:10px;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;font-weight:600}
+.row strong{display:block;font-weight:600}.row small{display:block;color:var(--muted);font-size:.82rem;line-height:1.35}
+.meta{display:grid;justify-items:end;gap:4px;font-size:.78rem;color:var(--muted);white-space:nowrap}
+.stars{display:inline-flex;flex-wrap:wrap;gap:2px}.star{display:inline-flex;width:20px;height:20px;color:var(--star-off)}.star.on{color:var(--gold)}.star svg{width:100%;height:100%;fill:currentColor}.big .star{width:34px;height:34px}
+.stage{display:grid;gap:16px}.intro{color:var(--muted)}
+.tip{display:none;white-space:pre-line;background:var(--gold-soft);border-left:5px solid var(--gold);border-radius:6px 12px 12px 6px;padding:12px 16px;font-size:.9rem}body.fac .tip{display:block}
+.tip b{display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.prompt{font-size:1.15rem;font-weight:500}.count{font-size:.85rem;color:var(--muted);font-weight:500}
+.toolrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.hint{background:var(--blue-soft);border-radius:10px;padding:10px 14px;font-size:.92rem}
+.feedback{border-radius:10px;padding:10px 14px;font-size:.95rem}.feedback:empty{display:none}
+.feedback.good{background:var(--good-soft);color:var(--good)}.feedback.bad{background:var(--bad-soft);color:var(--bad)}.feedback.info{background:var(--blue-soft);color:var(--ink)}
+.opts{display:grid;gap:10px}
+.opt{width:100%;min-height:54px;padding:12px 16px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-weight:500;text-align:left;line-height:1.35}
+.opt:disabled{cursor:default}.opt:disabled:not(.good):not(.bad){opacity:.55}
+.opt.good{border-color:var(--good);background:var(--good-soft);color:var(--good)}.opt.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+@media (prefers-reduced-motion:no-preference){.opt.bad,.tile.bad{animation:shake .28s}}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pairs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.col{display:grid;gap:10px;align-content:start}
+.tile{display:grid;gap:6px;align-content:center;min-height:62px;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;font-size:.92rem;line-height:1.35;overflow-wrap:anywhere}
+.tile.term{font-weight:600;font-size:1.02rem;color:var(--accent)}.tile.sel{border-color:var(--gold);background:var(--gold-soft);color:var(--ink)}
+.tile.good{border-color:var(--good);background:var(--good-soft);color:var(--good)}.tile.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.tile:disabled{cursor:default}.tile .tl{font-size:.8rem;font-weight:400;color:var(--muted)}.tile.good .tl{color:inherit}
+.seq{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:8px}
+.seq li{counter-increment:s;display:flex;gap:12px;align-items:center;min-height:50px;padding:8px 12px;border-radius:12px;border:2px dashed var(--line);color:var(--muted)}
+.seq li::before{content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--ink);display:grid;place-items:center;font-weight:600;font-size:.85rem}
+.seq li.filled{border-style:solid;border-color:var(--good);background:var(--good-soft);color:var(--good)}.seq li.filled::before{background:var(--good);color:var(--good-soft)}
+.pool{display:grid;gap:10px}
+.player{display:grid;gap:12px;background:var(--blue-soft);border-radius:16px;padding:16px}.story{background:var(--surface);border-radius:12px;padding:14px;font-size:1rem}
+.field{display:grid;gap:6px}.field label{font-weight:600;font-size:.9rem}
+.field input,.field textarea{width:100%;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.field textarea{min-height:9.5rem;resize:vertical;line-height:1.5}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{min-height:42px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--surface);font-size:.9rem;font-weight:500}.chip.word{border-color:var(--gold)}
+.label-s{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.92rem}.checks li{display:flex;gap:10px;align-items:center;color:var(--muted)}
+.checks li::before{content:"";flex:none;width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.72rem;line-height:1}
+.checks li.ok{color:var(--ink)}.checks li.ok::before{content:"\2713";background:var(--good);border-color:var(--good);color:var(--surface)}
+.out{background:var(--primary);color:var(--on-primary);border-radius:18px;padding:22px;display:grid;gap:12px;user-select:text;-webkit-user-select:text}
+.out .who{font-family:var(--font-display);font-weight:800;font-size:1.35rem}.out hr{border:0;height:4px;width:64px;border-radius:2px;background:var(--gold);margin:0}
+.out p{white-space:pre-wrap;overflow-wrap:anywhere}.out .tag{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.done{display:grid;gap:14px;justify-items:start;background:var(--blue-soft);border-radius:18px;padding:24px}
+.card.break{background:var(--surface);border:2px dashed var(--line);box-shadow:none}
+.gm-ov{position:fixed;inset:0;z-index:200;background:rgba(5,12,40,.72);display:grid;place-items:center}
+.gm-box{background:var(--surface);color:var(--ink);width:100%;max-width:60rem;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+@media(min-width:760px){.gm-ov{padding:20px}.gm-box{height:min(92vh,900px);border-radius:18px}}
+.gm-top{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;border-bottom:2px solid var(--line)}.gm-top h2{margin:0;font-size:1.05rem}.gm-act{display:flex;gap:8px;flex-wrap:wrap}
+.gm-body{overflow:auto;padding:14px;display:grid;gap:10px;align-content:start}
+.gm-play{padding:0;gap:0;grid-template-rows:auto minmax(0,1fr);overflow:hidden;align-content:stretch}.gm-play .hint{border-radius:0;font-size:.82rem;padding:6px 12px}
+.gm-frame{width:100%;height:100%;border:0;background:var(--surface)}
+a.btn{display:inline-grid;place-items:center;text-decoration:none;text-align:center}.chip.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}.card.mat h2{font-size:1.1rem}
+</style>
+
+<div id="app" class="shell"></div>
+
+<script>
+(function(){
+'use strict';
+/* EDIT HERE: all the words in the games. For multiple-choice, "answer" must be EXACTLY one of the "options".
+   For the Listen game, put your own audio file name in audioUrl (example "story.mp3"); if empty, the phone reads aloud. */
+var STORY=["Luca is 19 years old.","He stopped school when his family had money problems.","One rainy day, he saw a poster at the barangay hall.","The poster said, “You still have options.”","Luca was nervous, but he saved the phone number.","After some time, he made the call and asked, “Can I still study?”","The answer was, “Of course.”","Now Luca joins learning sessions.","He is no longer afraid to ask questions."];
+var CONTENT={
+brand:"Project INSPIRE · Language for Life",
+home:{title:"Hub Games",text:"Play in pairs. One person reads, the other taps. Mistakes are okay. Try again until you get it."},
+healthBreak:{title:"Health Break",text:"Stretch, drink water, and rest. See you in Session 2!"},
+sessions:[
+{label:"Session 1",time:"8:30–10:00 AM",title:"Online Learning Hub Orientation",
+blurb:"“Language Learning Beyond the Classroom.” Get to know hub access, navigation, search, and the learning materials. Practice reading interface text, following digital directions, and choosing accurate search words.",
+tip:"Use these games between your live hub demo. Show the real hub screen first, then let them play.\nSAY: “You already know more digital English than you think.”",
+activities:[
+{type:"match",title:"Hub Words",minutes:8,blurb:"Match each word from the hub and other apps to its meaning.",intro:"Tap a word on the left. Then tap its meaning on the right.",
+tip:"ASK: “Which of these words have you already seen on your phone?” [PAUSE for 2–3 answers]\nSAY: “These words are on almost every website and app.”\nTRANSITION: “Now let us use them.”",
+pairs:[
+{term:"Log in",meaning:"Enter your account with your username and password.",tl:"Pumasok sa account mo gamit ang username at password."},
+{term:"Search",meaning:"Look for a lesson, a file, or a word.",tl:"Maghanap ng aralin, file, o salita."},
+{term:"Menu",meaning:"A list of choices on the screen.",tl:"Listahan ng mga pagpipilian sa screen."},
+{term:"Download",meaning:"Save a file on your phone.",tl:"I-save ang file sa phone mo."},
+{term:"Submit",meaning:"Send your answer or your work.",tl:"Ipadala ang sagot o gawa mo."},
+{term:"Back",meaning:"Go to the page before.",tl:"Bumalik sa nakaraang pahina."}]},
+{type:"match",title:"Hub Materials",minutes:6,blurb:"Match each kind of lesson to what you can do with it.",intro:"Tap a lesson type on the left. Then tap what you can do with it on the right.",
+pairs:[
+{term:"Reading lessons",meaning:"Read short stories and texts.",tl:"Magbasa ng maikling kuwento at teksto."},
+{term:"Listening lessons",meaning:"Listen to audio and answer questions.",tl:"Makinig sa audio at sagutin ang mga tanong."},
+{term:"Vocabulary lists",meaning:"Learn new words for work and daily life.",tl:"Matuto ng bagong salita para sa trabaho at araw-araw."},
+{term:"Writing guides",meaning:"Learn to write letters and short messages.",tl:"Matutong sumulat ng liham at maikling mensahe."},
+{term:"Grammar lessons",meaning:"Learn how to build correct sentences.",tl:"Matutong bumuo ng tamang pangungusap."},
+{term:"Worksheets",meaning:"Download and practice on your phone.",tl:"I-download at magsanay sa phone mo."}]},
+{type:"choice",title:"What Should I Tap?",minutes:10,blurb:"Read the situation. Choose the right button or message.",intro:"Read each situation. Choose the best answer.",
+tip:"SAY: “Some screens are from other websites and apps, not only our hub.” (Our hub has no log in.)\nLet pairs discuss for 10 seconds before they tap. Ask one pair to explain why an answer is right.",
+questions:[
+{prompt:"You want to find a lesson about job interviews. Which button do you use?",options:["Search","Log out","Submit","Download"],answer:"Search",why:"Search helps you look for lessons and files.",hint:"Naghahanap ka ng aralin. Anong button ang pang-hanap?"},
+{prompt:"You finished your answers. Which button sends them?",options:["Back","Submit","Menu","Search"],answer:"Submit",why:"Submit means send.",hint:"Tapos mo na ang sagot. Alin ang magpapadala nito?"},
+{prompt:"You opened the wrong lesson by mistake. What do you tap to return?",options:["Back","Download","Submit","Log in"],answer:"Back",why:"Back takes you to the page before.",hint:"Gusto mong bumalik sa nakaraang pahina."},
+{prompt:"You want to keep a worksheet on your phone for later. What do you tap?",options:["Download","Search","Back","Help"],answer:"Download",why:"Download saves the file on your phone.",hint:"Gusto mong i-save ang file sa phone mo."},
+{prompt:"The screen says: “Incorrect password. Please try again.” What should you do?",options:["Type your password again carefully.","Ignore the message and wait.","Tap Download.","Log out of your phone."],answer:"Type your password again carefully.",why:"“Incorrect” means not correct. “Try again” means do it one more time.",hint:"Ang “Incorrect” ay mali. Ang “try again” ay subukan muli."},
+{prompt:"The screen says: “Your file is uploading. Please wait.” What is happening?",options:["The hub is receiving your file.","Your file was deleted.","Your password is wrong.","The lesson is finished."],answer:"The hub is receiving your file.",why:"Upload means sending a file from your phone to the hub.",hint:"Ang “upload” ay pagpapadala ng file mula sa phone papunta sa hub."}]},
+{type:"order",title:"Follow the Directions",minutes:8,blurb:"Put the steps in the right order.",intro:"Tap the step that comes first. Then the next one. Keep going until the list is complete.",
+tip:"SAY: “Digital directions are short commands. Read the first word of each step.”\nPoint out the action words: open, tap, type, choose, check.",
+rounds:[
+{title:"Open a lesson on the hub",hint:"Pindutin ang unang hakbang, tapos ang susunod.",steps:["Open the Online Learning Hub.","Tap the Search bar.","Type a keyword and tap Search.","Choose a lesson from the results.","Tap Open to start the lesson."]},
+{title:"Send your answer",hint:"Ano ang una mong gagawin bago mag-type?",steps:["Read the question carefully.","Type your answer in the box.","Check your spelling.","Tap Submit.","Wait for the message: Answer received."]}]},
+{type:"choice",title:"Pick the Best Search Words",minutes:10,blurb:"Choose the words that will find the right lesson.",intro:"Good search words are specific. Use two to four words. Check your spelling.",
+tip:"ASK: “Why is one word not enough?”\nSAY: “Too short gives too many results. Too long gives none.”\nAfter the game, let them search one real topic on the hub.",
+questions:[
+{prompt:"You want a short story to practice reading. Which search words are best?",options:["story","short story reading practice","I want something to read please thank you","read"],answer:"short story reading practice",why:"Two to four specific words work best. “story” is too wide. A full sentence is too long.",hint:"Piliin ang tiyak na salita. Hindi masyadong maikli, hindi masyadong mahaba."},
+{prompt:"You need help writing a job application letter. Which search words are best?",options:["letter","help","job application letter","I need help with writing"],answer:"job application letter",why:"These words name exactly what you need.",hint:"Anong eksaktong aralin ang kailangan mo?"},
+{prompt:"You want to practice listening in English. Which search words are best?",options:["English","listening","I like English audio things","English listening practice"],answer:"English listening practice",why:"It says the language and the skill and the purpose.",hint:"Isama ang wika at ang kasanayan."},
+{prompt:"You want to learn words about work. Which search words are best?",options:["words","I need work","work vocabulary","vocab"],answer:"work vocabulary",why:"“Vocabulary” means words you learn. “Work vocabulary” is clear and short.",hint:"Ang “vocabulary” ay mga salitang pinag-aaralan."},
+{prompt:"You want a lesson about grammar. Which spelling will find it?",options:["grammer","gramar","grammar","grammmar"],answer:"grammar",why:"One wrong letter can give you no results. Always check your spelling.",hint:"Tingnan nang mabuti ang bawat letra."}]}
+]},
+{label:"Session 2",time:"10:15–11:00 AM",title:"Guided Digital Language Learning Lab",
+blurb:"“Read, Listen, Respond.” Using one hub resource: learn words in context, read and listen, then write a short response.",
+tip:"The story is a short version of “The Road Is Still Open.” To use another hub resource, edit STORY and also the questions, vocabulary, listening questions and word bank in Session 2.\nOrder: read the story, words, listen, write.",
+activities:[
+{type:"find",title:"Find the Sentence",minutes:8,blurb:"Read the story. Tap the sentence that answers each question.",intro:"Read the story first. Then tap the sentence that answers the question.",
+tip:"SAY: “Good readers look for proof in the text.”\nAsk: “Which word in the sentence told you?”",passage:STORY,
+rounds:[
+{prompt:"Tap the sentence that shows why Luca stopped school.",answer:STORY[1],hint:"Hanapin ang dahilan kung bakit huminto si Luca."},
+{prompt:"Tap the sentence that shows Luca was nervous.",answer:STORY[4],hint:"Hanapin ang salitang nagpapakita ng kaba."},
+{prompt:"Tap the sentence that proves Luca is changing.",answer:STORY[8],hint:"Ano ang hindi na ginagawa ni Luca dahil sa takot?"}]},
+{type:"choice",title:"Word in Context",minutes:8,blurb:"Choose the word that fits the sentence.",
+intro:"Remember the story of Luca? Read the sentence. Choose the word that fits. Tap \u201CShow the story\u201D if you need it.",storyRef:STORY,
+tip:"Before each question, ask: “What clue in the sentence helps you?”\nPraise the clue, not only the answer.",
+questions:[
+{prompt:"Luca felt ____ before he made the phone call. His heart was beating fast.",options:["nervous","sleepy","proud"],answer:"nervous",why:"Nervous means worried or afraid before something important.",hint:"nervous = kinakabahan"},
+{prompt:"The person on the phone explained the ____: Monday to Friday, 8:00 AM.",options:["schedule","weather","mirror"],answer:"schedule",why:"A schedule tells you the days and the times.",hint:"schedule = iskedyul"},
+{prompt:"To join the program, you must bring a valid ID. This is a ____.",options:["requirement","rainstorm","birthday"],answer:"requirement",why:"A requirement is something you must have or must do.",hint:"requirement = kailangang dalhin o gawin"},
+{prompt:"Joining a learning program is a good ____ for Luca. It is a chance to start again.",options:["opportunity","opinion","opposite"],answer:"opportunity",why:"An opportunity is a chance to do something good.",hint:"opportunity = pagkakataon"},
+{prompt:"After many sessions, Luca felt more ____ when he spoke in class.",options:["confident","confused","absent"],answer:"confident",why:"Confident means you believe you can do it.",hint:"confident = may tiwala sa sarili"}]},
+{type:"choice",title:"Listen and Answer",minutes:8,blurb:"Listen to the story. Answer without reading.",intro:"Tap Play and listen. You can play it again. Then answer the questions.",
+tip:"Play it twice. First time: just listen. Second time: listen for the answers.\nIf the phone cannot read aloud, play your own recording or read it yourself.",
+listen:{text:STORY.join(" "),audioUrl:""},
+questions:[
+{prompt:"Where did Luca see the poster?",options:["At the barangay hall","At school","At the market","At home"],answer:"At the barangay hall",why:"The story says he saw a poster at the barangay hall.",hint:"Pakinggan ulit. Pindutin ang Play."},
+{prompt:"What did Luca ask on the phone?",options:["Can I still study?","Where is the market?","What time is it?","Can I borrow money?"],answer:"Can I still study?",why:"He asked, “Can I still study?” and the answer was, “Of course.”",hint:"Pakinggan ang tanong ni Luca."},
+{prompt:"How does Luca feel about asking questions now?",options:["He is not afraid to ask.","He never asks.","He feels ashamed.","He asks only his mother."],answer:"He is not afraid to ask.",why:"The last line says he is no longer afraid to ask questions.",hint:"Pakinggan ang huling pangungusap."}]},
+{type:"write",title:"My Response",minutes:10,blurb:"Write two or three sentences. Make your own card.",
+intro:"Luca took one small step. What is one step you can take after today? Write two or three sentences.",
+tip:"SAY: “No one will correct your grammar today. We are practicing confidence.”\nLet two or three volunteers read their card aloud.",
+prompt:"What is one step you can take after today?",starters:["One step I can take is","After today, I will","An opportunity for me is","I want to learn"],
+wordBank:["option","opportunity","schedule","requirement","nervous","confident"],minWords:8}
+]}
+]};
+/* ===================== END OF EDIT AREA ===================== */
+
+var app=document.getElementById('app'),state={view:'home',s:0,a:0,fac:false},progress={},audio=null;
+function h(tag,props){var el=document.createElement(tag);
+  if(props)for(var k in props){var v=props[k];if(v===null||v===undefined||v===false)continue;
+    if(k==='class')el.className=v;else if(k.indexOf('on')===0)el.addEventListener(k.slice(2),v);else el.setAttribute(k,v===true?'':v);}
+  (function add(l){l.forEach(function(c){if(c===null||c===undefined||c===false)return;if(Array.isArray(c))return add(c);el.append(c.nodeType?c:document.createTextNode(String(c)));});})(Array.prototype.slice.call(arguments,2));
+  return el;}
+function put(el){el.replaceChildren.apply(el,Array.prototype.slice.call(arguments,1).filter(function(k){return k!==null&&k!==undefined&&k!==false;}));}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function starIcon(on){var s=document.createElement('span');s.className='star'+(on?' on':'');s.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2 14.9,8.6 22,9.3 16.6,14 18.2,21 12,17.3 5.8,21 7.4,14 2,9.3 9.1,8.6"/></svg>';return s;}
+function stars(e,t,big){var w=h('span',{class:'stars'+(big?' big':''),role:'img','aria-label':e+' of '+t+' stars'});for(var i=0;i<t;i++)w.append(starIcon(i<e));return w;}
+function key(s,a){return s+'-'+a;}
+function totalStars(){var n=0;for(var k in progress)n+=progress[k].earned;return n;}
+function stopAudio(){try{if('speechSynthesis' in window)window.speechSynthesis.cancel();}catch(e){}if(audio){try{audio.pause();}catch(e){}audio=null;}}
+function go(view,s,a){stopAudio();state.view=view;if(s!==undefined)state.s=s;if(a!==undefined)state.a=a;render();window.scrollTo(0,0);}
+
+function header(label,title,sub){
+  var tot=totalStars();
+  return h('header',{class:'head'},
+    h('div',{class:'bar'},h('span',{class:'pill'},label),h('div',{class:'tools'},tot>0?h('span',{class:'total','aria-label':tot+' stars earned'},starIcon(true),String(tot)):null)),
+    h('h1',null,title),h('div',{class:'rule'}),sub?h('p',{class:'sub'},sub):null);}
+function tipBox(t){return null;}
+function footer(){return h('p',{class:'foot'},CONTENT.brand);}
+function render(){
+  var ses=CONTENT.sessions[state.s],act=ses&&ses.activities[state.a],nodes;
+  if(state.view==='home')nodes=homeView();else if(state.view==='materials')nodes=materialsView();else if(state.view==='games')nodes=gamesView();else if(state.view==='session')nodes=sessionView(ses);else nodes=activityView(ses,act);
+  app.replaceChildren.apply(app,nodes.concat([footer()]).filter(Boolean));}
+
+
+/* ---------- Online Materials (free links, checked Oct 2026) ---------- */
+var BC="https://learnenglish.britishcouncil.org/free-resources/",PEG="https://www.perfect-english-grammar.com/support-files/";
+var MATS=[
+{t:"A1 Reading",s:"British Council LearnEnglish",l:"A1",y:"web",c:["Reading"],d:"Simpleng babasahin: poster, mensahe, form, timetable. May mga tanong na masasagutan agad.",u:BC+"reading/a1"},
+{t:"A2 Reading",s:"British Council LearnEnglish",l:"A2",y:"web",c:["Reading"],d:"Email, imbitasyon, tips, at notices. Medyo mas mahaba kaysa A1.",u:BC+"reading/a2"},
+{t:"Reading with worksheets",s:"British Council LearnEnglish Teens",l:"A1-A2",y:"web",c:["Reading","Worksheets"],d:"Para sa teens pero puwede sa lahat. Maraming lesson ang may worksheet at sagot na puwedeng i-download.",u:"https://learnenglishteens.britishcouncil.org/skills/reading"},
+{t:"A1 Listening",s:"British Council LearnEnglish",l:"A1",y:"web",c:["Listening"],d:"Makinig sa maiikling usapan at sagutin ang mga tanong.",u:BC+"listening/a1"},
+{t:"A2 Listening",s:"British Council LearnEnglish",l:"A2",y:"web",c:["Listening"],d:"Makinig sa pang-araw-araw na usapan at sagutin ang mga tanong.",u:BC+"listening/a2"},
+{t:"A1-A2 Vocabulary",s:"British Council LearnEnglish",l:"A1-A2",y:"web",c:["Vocabulary"],d:"Mga salita para sa araw-araw, may exercises.",u:BC+"vocabulary/a1-a2"},
+{t:"A1-A2 Grammar",s:"British Council LearnEnglish",l:"A1-A2",y:"web",c:["Grammar"],d:"Maikling paliwanag at exercises sa grammar.",u:BC+"grammar/a1-a2"},
+{t:"A1 Writing",s:"British Council LearnEnglish",l:"A1",y:"web",c:["Writing"],d:"Magsanay sumulat ng maiikling mensahe at impormasyon.",u:BC+"writing/a1"},
+{t:"A2 Writing",s:"British Council LearnEnglish",l:"A2",y:"web",c:["Writing"],d:"Magsanay sumulat ng mga mensahe at maikling teksto.",u:BC+"writing/a2"},
+{t:"You're Hired: job interview videos",s:"British Council LearnEnglish",l:"B1-B2",y:"vid",c:["Job & Work","Listening"],d:"Video series tungkol sa pag-apply at interview, may transcript at exercises. Mas mahirap, para sa handa na.",u:BC+"business/youre-hired",k:"interview application trabaho job"},
+{t:"Present Simple with be: Positive",s:"Perfect English Grammar",l:"Beginner",y:"pdf",c:["Grammar","Worksheets"],d:"Printable na ehersisyo, may sagot. I am, you are, he is.",u:PEG+"present_simple_form_be_positive.pdf"},
+{t:"Present Simple with be: Questions",s:"Perfect English Grammar",l:"Beginner",y:"pdf",c:["Grammar","Worksheets"],d:"Yes/No questions gamit ang be. May sagot.",u:PEG+"present_simple_form_be_yes-no-questions.pdf"},
+{t:"Present Simple: Positive (other verbs)",s:"Perfect English Grammar",l:"Beginner",y:"pdf",c:["Grammar","Worksheets"],d:"I work, she works. Printable, may sagot.",u:PEG+"present_simple_form_other-verbs_positive_1.pdf"},
+{t:"Past Simple with be: Positive and Negative",s:"Perfect English Grammar",l:"Beginner",y:"pdf",c:["Grammar","Worksheets"],d:"was at were. Printable, may sagot.",u:PEG+"past_simple_form_with_be_positive_and_negative.pdf"},
+{t:"50 Irregular Verbs: Past Simple 1",s:"Perfect English Grammar",l:"Elementary",y:"pdf",c:["Grammar","Vocabulary","Worksheets"],d:"Mga karaniwang irregular verb (went, saw, had). May sagot.",u:PEG+"50_irregular_verbs_past_simple_part_1.pdf"},
+{t:"Prepositions of Place 1",s:"Perfect English Grammar",l:"Beginner",y:"pdf",c:["Grammar","Worksheets"],d:"in, on, at, under, next to. Printable, may sagot.",u:PEG+"prepositions_of_place_1.pdf"},
+{t:"Prepositions of Time 1",s:"Perfect English Grammar",l:"Beginner",y:"pdf",c:["Grammar","Worksheets"],d:"in, on, at para sa oras at petsa. Printable, may sagot.",u:PEG+"prepositions_of_time_1.pdf"},
+{t:"Some and Any: Exercise 1",s:"Perfect English Grammar",l:"Beginner",y:"pdf",c:["Grammar","Worksheets"],d:"Kailan gagamitin ang some at any. May sagot.",u:PEG+"some-and-any-exercise-1.pdf"},
+{t:"All Tenses: Summary Sheet",s:"Perfect English Grammar",l:"All",y:"pdf",c:["Grammar","Worksheets"],d:"Isang pahinang buod ng lahat ng tenses. Puwedeng i-print.",u:PEG+"all_tenses_form_cheatsheet.pdf"},
+{t:"All free grammar PDFs (full list)",s:"Perfect English Grammar",l:"All",y:"web",c:["Grammar","Worksheets"],d:"Lahat ng libreng PDF sa isang pahina. Pumili ng topic at i-download.",u:"https://www.perfect-english-grammar.com/english-language-pdf.html"},
+{t:"ALS Learning Resources",s:"DepEd LRMDS",l:"ALS",y:"web",c:["DepEd ALS"],d:"Libreng modules ng DepEd para sa out-of-school youth at adults. Hanapin ang English at Communication Skills.",u:"https://lrmds.deped.gov.ph/als/0",k:"osy alternative learning system module filipino"},
+{t:"ALS Communication Skills (Advance Elementary)",s:"DepEd LRMDS",l:"ALS",y:"web",c:["DepEd ALS"],d:"English communication skills module ng ALS. Buksan ang page para sa file.",u:"https://lrmds.deped.gov.ph/detail/21760",k:"osy module english"}
+];
+var MCATS=["All","Reading","Listening","Vocabulary","Grammar","Writing","Worksheets","Job & Work","DepEd ALS"],mq="",mc="All";
+function matchMat(m){if(mc!=="All"&&m.c.indexOf(mc)<0)return false;var q=mq.toLowerCase().trim();if(!q)return true;
+  var hay=(m.t+" "+m.s+" "+m.l+" "+m.c.join(" ")+" "+m.d+" "+(m.k||"")+" "+(m.y==="pdf"?"pdf download":m.y==="vid"?"video":"website")).toLowerCase();
+  return q.split(/\s+/).every(function(w){return hay.indexOf(w)>=0;});}
+function materialsView(){
+  var list=h('div',{class:'rows'}),count=h('p',{class:'count','aria-live':'polite'}),chips=h('div',{class:'chips'});
+  function card(m){var kind=m.y==="pdf"?"PDF":m.y==="vid"?"Video":"Website";
+    return h('section',{class:'card mat'},h('span',{class:'kicker'},m.s+' · '+m.l+' · '+kind),h('h2',null,m.t),h('p',null,m.d),
+      h('div',{class:'btns'},h('a',{class:'btn'+(m.y==="pdf"?' gold':''),href:m.u,target:'_blank',rel:'noopener noreferrer'},m.y==="pdf"?'Download PDF':'Open')));}
+  function draw(){var res=MATS.filter(matchMat);count.textContent=res.length+' of '+MATS.length+' materials';
+    list.replaceChildren.apply(list,res.length?res.map(card):[h('p',{class:'hint'},'Walang nahanap. Try: reading, listening, grammar, job, pdf.')]);
+    chips.replaceChildren.apply(chips,MCATS.map(function(c){return h('button',{class:'chip'+(c===mc?' on':''),type:'button','aria-pressed':c===mc?'true':'false',onclick:function(){mc=c;draw();}},c);}));}
+  var input=h('input',{id:'m-q',type:'search',placeholder:'Search: reading, grammar, job, pdf...',autocomplete:'off','aria-label':'Search materials',value:mq,oninput:function(e){mq=e.target.value;draw();}});
+  draw();
+  return [header('Online Materials','Free Materials & Worksheets','Search, then tap Open or Download. All links are free.'),
+    h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← All sessions'),
+    h('button',{class:'link',type:'button',onclick:function(){go('games');}},'Looking for games? Open Games →'),h('div',{class:'field'},h('label',{for:'m-q'},'Search materials'),input),chips,count,
+    h('p',{class:'hint'},'You need internet. Save a PDF on your phone to use it offline. Websites can change, so the facilitator checks the links before the session.'),list];}
+
+/* ---------- Online Games (modal list + iframe player) ---------- */
+var ES="https://www.esleschool.com/";
+var GROUPS=[{k:"vocab",t:"Vocabulary Games",d:"Spelling, word meanings, and word building."},{k:"grammar",t:"Grammar Games",d:"Choose the right word, find the mistake, put words in order."}];
+var GAMES=[
+{g:"vocab",t:"Sushi Spell",s:"British Council",l:"All levels",d:"Spell as many words as you can in two minutes.",u:BC+"vocabulary/games/sushi-spell"},
+{g:"vocab",t:"Wordshake",s:"British Council",l:"All levels",d:"Make words from the letters. Longer words score more. Three minutes.",u:BC+"vocabulary/games/wordshake"},
+{g:"vocab",t:"Word Search",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Find hidden words in a letter grid.",u:ES+"word-search/"},
+{g:"vocab",t:"Flashcards",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Flip cards to learn and test word meanings.",u:ES+"flashcards/"},
+{g:"vocab",t:"Crossword",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Read the clue and type the word.",u:ES+"crossword/"},
+{g:"vocab",t:"Matching Pairs",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Match each word with its meaning.",u:ES+"matching-pairs/"},
+{g:"vocab",t:"Anagram",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Unscramble the letters to make the word.",u:ES+"anagram/"},
+{g:"vocab",t:"Word Detective",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Read the clue and guess the hidden word.",u:ES+"word-detective/"},
+{g:"vocab",t:"WordQuest",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Guess the hidden word in six tries.",u:ES+"wordquest/"},
+{g:"vocab",t:"BuzzWords",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Make words from seven letters. Use the centre letter.",u:ES+"buzzwords/"},
+{g:"grammar",t:"Grammar Snap",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Is the sentence correct or incorrect? Decide fast.",u:ES+"grammar-snap/"},
+{g:"grammar",t:"Gap Fill",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Choose the word that fits the gap.",u:ES+"gap-fill/"},
+{g:"grammar",t:"Spot the Mistake",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Find the mistake and choose the correction.",u:ES+"spot-the-mistake/"},
+{g:"grammar",t:"Sentence Scramble",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Tap the words into the correct order.",u:ES+"sentence-scramble/"}
+];
+var gmEl=null,gmKey=null;
+function gmClose(){if(gmEl){gmEl.remove();gmEl=null;}document.body.style.overflow='';if(gmKey){document.removeEventListener('keydown',gmKey);gmKey=null;}}
+function gmOpen(g,game){
+  stopAudio();
+  if(!gmEl){gmEl=h('div',{class:'gm-ov',role:'dialog','aria-modal':'true','aria-label':'Online games'});
+    gmEl.addEventListener('click',function(e){if(e.target===gmEl)gmClose();});document.body.appendChild(gmEl);document.body.style.overflow='hidden';
+    gmKey=function(e){if(e.key==='Escape')gmClose();};document.addEventListener('keydown',gmKey);}
+  var grp=GROUPS.filter(function(x){return x.k===g;})[0],box;
+  if(!game){
+    var items=GAMES.filter(function(m){return m.g===g;}).map(function(m){return h('button',{class:'row',type:'button',onclick:function(){gmOpen(g,m);}},h('span',{class:'n'},'▶'),h('span',null,h('strong',null,m.t),h('small',null,m.d)),h('span',{class:'meta'},h('span',null,m.s)));});
+    box=h('div',{class:'gm-box'},h('div',{class:'gm-top'},h('h2',null,grp.t),h('button',{class:'btn small',type:'button',onclick:gmClose},'Close')),
+      h('div',{class:'gm-body'},h('p',{class:'hint'},'Tap a game to play it here. If the screen stays blank, tap Open in new tab inside the game.'),items));
+  }else{
+    var fr=h('iframe',{class:'gm-frame',src:game.u,title:game.t,allow:'fullscreen; autoplay',sandbox:'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-pointer-lock'});
+    box=h('div',{class:'gm-box'},h('div',{class:'gm-top'},h('button',{class:'btn ghost small',type:'button',onclick:function(){gmOpen(g);}},'← Games'),h('strong',null,game.t),
+      h('span',{class:'gm-act'},h('a',{class:'btn gold small',href:game.u,target:'_blank',rel:'noopener noreferrer'},'Open in new tab'),h('button',{class:'btn small',type:'button',onclick:gmClose},'Close'))),
+      h('div',{class:'gm-body gm-play'},h('p',{class:'hint'},'Blank screen or "refused to connect"? Tap Open in new tab.'),fr));}
+  gmEl.replaceChildren(box);}
+function gamesView(){
+  var cards=GROUPS.map(function(g){var n=GAMES.filter(function(m){return m.g===g.k;}).length;
+    return h('section',{class:'card'+(g.k==='grammar'?' cream':'')},h('span',{class:'kicker'},n+' games'),h('h2',null,g.t),h('p',null,g.d),
+      h('div',{class:'btns'},h('button',{class:'btn'+(g.k==='grammar'?' gold':''),type:'button',onclick:function(){gmOpen(g.k);}},'Open '+g.t)));});
+  return [header('Online Games','Free English Games','Pick a group, choose a game, and play right here.'),
+    h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← All sessions'),
+    h('p',{class:'hint'},'You need internet. If a game stays blank, tap Open in new tab. The facilitator tests the games before the session.'),h('div',{class:'cards'},cards)];}
+function homeView(){
+  var cards=CONTENT.sessions.map(function(ses,si){
+    return h('section',{class:'card'+(si%2?' cream':'')},
+      h('span',{class:'kicker'},ses.label+' · '+ses.time),h('h2',null,ses.title),h('p',null,ses.blurb),
+      h('ul',null,ses.activities.map(function(act,ai){var p=progress[key(si,ai)];return h('li',null,h('span',null,act.title),p?stars(p.earned,p.total):h('span',{class:'count'},act.minutes+' min'));})),
+      h('div',{class:'btns'},h('button',{class:'btn'+(si%2?' gold':''),type:'button',onclick:function(){go('session',si);}},'Open '+ses.label)));});
+  cards.push(h('section',{class:'card cream'},h('span',{class:'kicker'},'Play more'),h('h2',null,'Online Games'),h('p',null,'Free vocabulary and grammar games. Play right here.'),h('div',{class:'btns'},h('button',{class:'btn gold',type:'button',onclick:function(){go('games');}},'Open Games'))));
+  cards.push(h('section',{class:'card'},h('span',{class:'kicker'},'After the training'),h('h2',null,'Free Materials & Worksheets'),h('p',null,'Search free reading, listening, grammar and worksheet links you can use anytime.'),h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){go('materials');}},'Open Materials'))));
+  cards.splice(1,0,h('section',{class:'card break'},h('span',{class:'kicker'},'In between'),h('h2',null,CONTENT.healthBreak.title+' 💧'),h('p',null,CONTENT.healthBreak.text)));
+  return [header('Project INSPIRE',CONTENT.home.title,CONTENT.home.text),h('div',{class:'cards'},cards)];}
+function sessionView(ses){
+  var rows=ses.activities.map(function(act,ai){var p=progress[key(state.s,ai)];
+    return h('button',{class:'row',type:'button',onclick:function(){go('activity',state.s,ai);}},
+      h('span',{class:'n'},String(ai+1)),h('span',null,h('strong',null,act.title),h('small',null,act.blurb)),
+      h('span',{class:'meta'},h('span',null,act.minutes+' min'),p?stars(p.earned,p.total):null));});
+  return [header(ses.label+' · '+ses.time,ses.title,ses.blurb),h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← All sessions'),tipBox(ses.tip),h('div',{class:'rows'},rows)];}
+var RUNNERS={};
+function activityView(ses,act){
+  var box=h('div',{class:'stage'}),ctx={box:box,ses:ses,act:act};
+  ctx.finish=function(e,t){finish(ctx,e,t);};
+  var run=RUNNERS[act.type];if(run)run(ctx);else box.append(h('p',null,'Unknown activity type: '+act.type));
+  return [header(ses.label,act.title),h('button',{class:'link',type:'button',onclick:function(){go('session');}},'← Back to '+ses.label),h('p',{class:'intro'},act.intro),tipBox(act.tip),box];}
+function finish(ctx,earned,total){
+  stopAudio();progress[key(state.s,state.a)]={earned:earned,total:total};
+  var ses=ctx.ses,last=state.a>=ses.activities.length-1,ratio=total?earned/total:1;
+  var msg=ratio>=0.8?'Great work! You got it on the first try most of the time.':'Good try. Play again to earn more stars.';
+  ctx.box.replaceChildren(h('div',{class:'done'},h('h2',null,'Well done!'),stars(earned,total,true),
+    h('p',null,'You earned '+earned+' of '+total+' stars. A star means you got it right on the first try.'),h('p',null,msg),
+    h('div',{class:'btns'},
+      last?h('button',{class:'btn',type:'button',onclick:function(){go('session');}},'Back to '+ses.label)
+          :h('button',{class:'btn',type:'button',onclick:function(){go('activity',state.s,state.a+1);}},'Next activity'),
+      h('button',{class:'btn ghost',type:'button',onclick:function(){go('activity',state.s,state.a);}},'Play again'))));
+  window.scrollTo(0,0);}
+
+RUNNERS.match=function(ctx){
+  var box=ctx.box,pairs=ctx.act.pairs,idx=pairs.map(function(_,i){return i;}),left=shuffle(idx),right=shuffle(idx);
+  var sel=null,flash=null,showTl=false,msg='',msgClass='info',done={},missed={},doneCount=0;
+  function draw(){
+    var lcol=h('div',{class:'col'},left.map(function(i){return h('button',{type:'button',class:'tile term'+(done[i]?' good':'')+(sel===i?' sel':''),disabled:!!done[i],onclick:function(){sel=i;msg='';flash=null;draw();}},pairs[i].term);}));
+    var rcol=h('div',{class:'col'},right.map(function(i){return h('button',{type:'button',class:'tile'+(done[i]?' good':'')+(flash===i?' bad':''),disabled:!!done[i],onclick:function(){pickMeaning(i);}},pairs[i].meaning,showTl&&pairs[i].tl?h('span',{class:'tl'},pairs[i].tl):null);}));
+    box.replaceChildren(
+      h('div',{class:'toolrow'},h('button',{class:'btn ghost small',type:'button',onclick:function(){showTl=!showTl;draw();}},showTl?'Hide Filipino help':'Tulong (Filipino)'),h('span',{class:'count'},doneCount+' of '+pairs.length+' matched')),
+      h('div',{class:'pairs'},lcol,rcol),h('div',{class:'feedback '+msgClass,'aria-live':'polite'},msg));}
+  function pickMeaning(j){
+    if(sel===null){msg='First tap a word on the left.';msgClass='info';flash=null;draw();return;}
+    if(sel===j){done[j]=true;doneCount++;msg='Correct! '+pairs[j].term+' matches.';msgClass='good';sel=null;flash=null;
+      if(doneCount===pairs.length){ctx.finish(pairs.length-Object.keys(missed).length,pairs.length);return;}}
+    else{missed[sel]=true;msg='Not a match. Try again.';msgClass='bad';flash=j;sel=null;}
+    draw();}
+  draw();};
+
+function listenPlayer(L){
+  var canSpeak='speechSynthesis' in window,text=h('p',{class:'story',hidden:true},L.text),note=h('p',{class:'hint',hidden:true});
+  var showBtn=h('button',{class:'btn ghost small',type:'button',onclick:function(){text.hidden=!text.hidden;showBtn.textContent=text.hidden?'Show the text':'Hide the text';}},'Show the text');
+  var playId=0,auto=false;
+  function reveal(m){auto=true;text.hidden=false;showBtn.textContent='Hide the text';note.hidden=false;note.textContent=m;}
+  function stopAll(){playId++;stopAudio();}
+  function play(slow){
+    var my=++playId;stopAudio();
+    if(L.audioUrl){audio=new Audio(L.audioUrl);audio.playbackRate=slow?0.8:1;audio.play().catch(function(){note.hidden=false;note.textContent='The audio could not play. Tap Show the text and read it.';});return;}
+    if(!canSpeak)return;
+    var u=new SpeechSynthesisUtterance(L.text);u.lang='en-US';u.rate=slow?0.7:0.92;var msg='No sound? Ask your facilitator to read the story, or read it yourself.';
+    u.onstart=function(){if(my===playId&&auto){auto=false;text.hidden=true;showBtn.textContent='Show the text';note.hidden=true;}};
+    u.onerror=function(e){if(my!==playId||(e&&(e.error==='interrupted'||e.error==='canceled')))return;reveal(msg);};
+    window.speechSynthesis.speak(u);
+    setTimeout(function(){if(my===playId&&!window.speechSynthesis.speaking)reveal(msg);},4000);}
+  if(!canSpeak&&!L.audioUrl){text.hidden=false;showBtn.textContent='Hide the text';note.hidden=false;note.textContent='This phone cannot read aloud. Ask your facilitator to read the story, or read it yourself.';}
+  return h('div',{class:'player'},h('span',{class:'label-s'},'Listen to the story'),
+    h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){play(false);}},'Play'),h('button',{class:'btn gold',type:'button',onclick:function(){play(true);}},'Play slowly'),h('button',{class:'btn ghost small',type:'button',onclick:stopAll},'Stop'),showBtn),note,text);}
+
+RUNNERS.choice=function(ctx){
+  var act=ctx.act,qs=act.questions,qi=0,earned=0;
+  var player=act.listen?listenPlayer(act.listen):null,holder=h('div',{class:'stage'}),ref=null;
+  if(act.storyRef){
+    var refText=h('p',{class:'story',hidden:true},act.storyRef.join(' '));
+    var refBtn=h('button',{class:'btn ghost small',type:'button',onclick:function(){refText.hidden=!refText.hidden;refBtn.textContent=refText.hidden?'Show the story':'Hide the story';}},'Show the story');
+    ref=h('div',{class:'stage'},h('div',{class:'btns'},refBtn),refText);}
+  ctx.box.replaceChildren(h('div',{class:'stage'},player,ref,holder));
+  function showQ(){
+    var q=qs[qi],wrong=0,solved=false,opts=shuffle(q.options);
+    var fb=h('div',{class:'feedback','aria-live':'polite'}),hintEl=h('p',{class:'hint',hidden:true},q.hint||'');
+    var next=h('div',{class:'btns',hidden:true},h('button',{class:'btn',type:'button',onclick:function(){if(qi<qs.length-1){qi++;showQ();}else ctx.finish(earned,qs.length);}},qi<qs.length-1?'Next question':'See my stars'));
+    var btns=opts.map(function(o){
+      var b=h('button',{class:'opt',type:'button',onclick:function(){
+        if(solved)return;
+        if(o===q.answer){solved=true;if(wrong===0)earned++;b.classList.add('good');btns.forEach(function(x){x.disabled=true;});fb.className='feedback good';fb.replaceChildren(h('strong',null,'Correct! '),q.why||'');next.hidden=false;}
+        else{wrong++;b.classList.add('bad');b.disabled=true;fb.className='feedback bad';fb.textContent='Not yet. Try another answer.';}}},o);
+      return b;});
+    holder.replaceChildren(
+      h('div',{class:'toolrow'},h('span',{class:'count'},'Question '+(qi+1)+' of '+qs.length),q.hint?h('button',{class:'btn ghost small',type:'button',onclick:function(){hintEl.hidden=!hintEl.hidden;}},'Tulong (Filipino)'):null),
+      h('p',{class:'prompt'},q.prompt),hintEl,h('div',{class:'opts'},btns),fb,next);}
+  showQ();};
+
+RUNNERS.order=function(ctx){
+  var rounds=ctx.act.rounds,ri=0,earned=0,box=ctx.box;
+  var total=rounds.reduce(function(n,r){return n+r.steps.length;},0);
+  function showRound(){
+    var r=rounds[ri],chosen=[],misses={},missCount=0,msg='',msgClass='info',pool=shuffle(r.steps),complete=false,hintOpen=false;
+    function draw(){
+      var list=h('ol',{class:'seq'},r.steps.map(function(_,i){return h('li',{class:i<chosen.length?'filled':''},i<chosen.length?chosen[i]:'Tap the next step');}));
+      var left=pool.filter(function(s){return chosen.indexOf(s)<0;});
+      put(box,
+        h('div',{class:'toolrow'},h('span',{class:'count'},'Round '+(ri+1)+' of '+rounds.length),r.hint?h('button',{class:'btn ghost small',type:'button',onclick:function(){hintOpen=!hintOpen;draw();}},'Tulong (Filipino)'):null),
+        h('h3',null,r.title),hintOpen?h('p',{class:'hint'},r.hint):null,list,
+        left.length?h('div',{class:'pool'},left.map(function(s){return h('button',{class:'opt',type:'button',onclick:function(){pick(s);}},s);})):null,
+        h('div',{class:'feedback '+msgClass,'aria-live':'polite'},msg),
+        complete?h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){if(ri<rounds.length-1){ri++;showRound();}else ctx.finish(earned,total);}},ri<rounds.length-1?'Next round':'See my stars')):null);}
+    function pick(s){
+      if(s===r.steps[chosen.length]){chosen.push(s);msg='';msgClass='info';
+        if(chosen.length===r.steps.length){earned+=r.steps.length-missCount;complete=true;msg='Correct! That is the right order.';msgClass='good';}}
+      else{if(!misses[chosen.length]){misses[chosen.length]=true;missCount++;}msg='Not that one. What comes next?';msgClass='bad';}
+      draw();}
+    draw();}
+  showRound();};
+
+RUNNERS.find=function(ctx){
+  var act=ctx.act,rounds=act.rounds,ri=0,earned=0,box=ctx.box;
+  function showRound(){
+    var r=rounds[ri],wrong={},wrongCount=0,solved=false,hintOpen=false,msg='',msgClass='info';
+    function draw(){
+      put(box,
+        h('div',{class:'toolrow'},h('span',{class:'count'},'Question '+(ri+1)+' of '+rounds.length),r.hint?h('button',{class:'btn ghost small',type:'button',onclick:function(){hintOpen=!hintOpen;draw();}},'Tulong (Filipino)'):null),
+        h('p',{class:'prompt'},r.prompt),hintOpen?h('p',{class:'hint'},r.hint):null,
+        h('div',{class:'opts'},act.passage.map(function(sent){var cls='opt'+(solved&&sent===r.answer?' good':'')+(wrong[sent]?' bad':'');return h('button',{class:cls,type:'button',disabled:solved||!!wrong[sent],onclick:function(){pick(sent);}},sent);})),
+        h('div',{class:'feedback '+msgClass,'aria-live':'polite'},msg),
+        solved?h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){if(ri<rounds.length-1){ri++;showRound();}else ctx.finish(earned,rounds.length);}},ri<rounds.length-1?'Next question':'See my stars')):null);}
+    function pick(sent){
+      if(sent===r.answer){solved=true;if(wrongCount===0)earned++;msg='Correct! This sentence is the proof.';msgClass='good';}
+      else{wrong[sent]=true;wrongCount++;msg='Not this one. Read again and try another sentence.';msgClass='bad';}
+      draw();}
+    draw();}
+  showRound();};
+
+RUNNERS.write=function(ctx){
+  var act=ctx.act,box=ctx.box,minWords=act.minWords||8;
+  var name=h('input',{id:'w-name',type:'text',placeholder:'Your first name',autocomplete:'off',maxlength:'30'});
+  var ta=h('textarea',{id:'w-text',placeholder:'Type your sentences here.'});
+  var checks=[
+    {label:'Starts with a capital letter',test:function(t){return /^[A-Z]/.test(t);}},
+    {label:'Ends with a period, ! or ?',test:function(t){return /[.!?]["”')]?$/.test(t);}},
+    {label:'Has at least '+minWords+' words',test:function(t,w){return w>=minWords;}},
+    {label:'Uses a word from the word bank',test:function(t){return (act.wordBank||[]).some(function(w){return new RegExp('\\b'+w.replace(/[^a-z]/gi,'')+'\\b','i').test(t);});}}];
+  var items=checks.map(function(c){return h('li',null,c.label);}),status=h('div',{class:'feedback info','aria-live':'polite'});
+  function result(){var t=ta.value.trim(),w=t?t.split(/\s+/).length:0,passed=0;
+    checks.forEach(function(c,i){var ok=t&&c.test(t,w);items[i].className=ok?'ok':'';if(ok)passed++;});return {t:t,w:w,passed:passed};}
+  function insert(txt){
+    var s=ta.selectionStart,e=ta.selectionEnd;if(typeof s!=='number'){s=e=ta.value.length;}
+    var before=ta.value.slice(0,s),after=ta.value.slice(e),pad=before&&!/\s$/.test(before)?' ':'';
+    ta.value=before+pad+txt+' '+after;var pos=(before+pad+txt+' ').length;ta.focus();ta.setSelectionRange(pos,pos);result();}
+  ta.addEventListener('input',result);
+  function showCard(){
+    var r=result();
+    if(r.w<3){status.className='feedback bad';status.textContent='Write a little more first. Try two or three sentences.';return;}
+    var who=name.value.trim(),note=h('div',{class:'feedback info','aria-live':'polite'});
+    var out=h('div',{class:'out'},h('span',{class:'tag'},CONTENT.brand),h('div',{class:'who'},who?who+'’s next step':'My next step'),h('hr'),h('p',null,r.t));
+    var plain=(who?who+': ':'')+r.t;
+    box.replaceChildren(out,h('p',{class:'count'},r.passed+' of '+checks.length+' checks complete.'),note,
+      h('div',{class:'btns'},
+        h('button',{class:'btn gold',type:'button',onclick:function(){
+          function fallback(){note.textContent='Could not copy. Press and hold the card text to copy it.';}
+          if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(plain).then(function(){note.textContent='Copied. Paste it where your facilitator asks.';},fallback);}else fallback();}},'Copy my card'),
+        h('button',{class:'btn ghost',type:'button',onclick:function(){box.replaceChildren.apply(box,form());result();}},'Edit again'),
+        h('button',{class:'btn',type:'button',onclick:function(){ctx.finish(r.passed,checks.length);}},'Finish')));}
+  function form(){
+    return [
+      h('div',{class:'field'},h('label',{for:'w-name'},'Your name (optional)'),name),
+      h('p',{class:'prompt'},act.prompt),
+      h('div',null,h('span',{class:'label-s'},'Start your sentence'),h('div',{class:'chips'},(act.starters||[]).map(function(s){return h('button',{class:'chip',type:'button',onclick:function(){insert(s);}},s+' …');}))),
+      h('div',null,h('span',{class:'label-s'},'Word bank (tap to add)'),h('div',{class:'chips'},(act.wordBank||[]).map(function(w){return h('button',{class:'chip word',type:'button',onclick:function(){insert(w);}},w);}))),
+      h('div',{class:'field'},h('label',{for:'w-text'},'My response'),ta),
+      h('ul',{class:'checks'},items),status,
+      h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:showCard},'Make my card'))];}
+  box.replaceChildren.apply(box,form());result();};
+
+render();
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var app=document.getElementById('app'); if(!app) return;
+var on=true; try{on=localStorage.getItem('inspireSound')!=='off'}catch(e){}
+var calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var ac=null, combo=0, px=innerWidth/2, py=innerHeight/2, snap=null, tEl=null;
+
+/* ---------- CSS ---------- */
+var css='\
+@keyframes fxrise{from{opacity:0;transform:translateY(26px) scale(.93)}60%{transform:translateY(-5px) scale(1.02)}to{opacity:1;transform:none}}\
+@keyframes fxpop{0%{transform:scale(1)}40%{transform:scale(1.09)}70%{transform:scale(.97)}100%{transform:scale(1)}}\
+@keyframes fxstar{0%{transform:scale(0) rotate(-140deg);opacity:0}70%{transform:scale(1.55) rotate(14deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}\
+@keyframes fxbob{50%{transform:translateY(-6px)}}\
+@keyframes fxgrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}\
+@keyframes fxtoast{0%{transform:translate(-50%,40px) scale(.6);opacity:0}15%{transform:translate(-50%,0) scale(1.14);opacity:1}25%{transform:translate(-50%,0) scale(1)}80%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-12px);opacity:0}}\
+#fx-toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);opacity:0;background:var(--gold);color:var(--on-gold);font:800 1.2rem var(--font-display);padding:.7rem 1.3rem;border-radius:999px;box-shadow:0 12px 26px -8px var(--shadow);z-index:100;pointer-events:none;white-space:nowrap}\
+#fx-toast.show{animation:fxtoast 1.5s both}\
+.done .star{animation:fxstar .6s cubic-bezier(.34,1.56,.64,1) both}\
+@media (prefers-reduced-motion:no-preference){\
+.shell>*{animation:fxrise .55s both}\
+.shell>*:nth-child(2){animation-delay:.05s}.shell>*:nth-child(3){animation-delay:.1s}.shell>*:nth-child(4){animation-delay:.15s}.shell>*:nth-child(5){animation-delay:.2s}.shell>*:nth-child(6){animation-delay:.25s}\
+.cards>*,.rows>*{animation:fxrise .6s both}\
+.cards>*:nth-child(2),.rows>*:nth-child(2){animation-delay:.1s}.rows>*:nth-child(3){animation-delay:.18s}.rows>*:nth-child(4){animation-delay:.26s}.rows>*:nth-child(5){animation-delay:.34s}\
+.pill{animation:fxbob 2.6s ease-in-out infinite}\
+.rule{transform-origin:left;animation:fxgrow .7s .2s both}\
+.done h2{animation:fxbob 1.5s ease-in-out infinite}\
+.btn,.opt,.tile,.chip,.row,.toggle{transition:transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s}\
+.btn:active,.opt:active:not(:disabled),.tile:active:not(:disabled),.chip:active,.row:active,.toggle:active{transform:scale(.93)}\
+.opt.good,.feedback.good,.tile.sel{animation:fxpop .45s}\
+.feedback.bad{animation:fxpop .35s}\
+.total .star{animation:fxbob 1.8s ease-in-out infinite}\
+}\
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.btn:hover,.row:hover,.opt:hover:not(:disabled),.tile:hover:not(:disabled){transform:translateY(-3px)}}';
+var st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
+
+/* ---------- sound ---------- */
+function unlock(){
+  if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(ac && ac.state==='suspended') ac.resume();
+  return ac;
+}
+function tone(f,t,d,type,v,f2){
+  if(!on) return; var a=unlock(); if(!a) return;
+  var o=a.createOscillator(), g=a.createGain(), s=a.currentTime+t;
+  o.type=type||'sine'; o.frequency.setValueAtTime(f,s);
+  if(f2) o.frequency.exponentialRampToValueAtTime(f2,s+d);
+  g.gain.setValueAtTime(.0001,s); g.gain.exponentialRampToValueAtTime(v||.15,s+.01); g.gain.exponentialRampToValueAtTime(.0001,s+d);
+  o.connect(g); g.connect(a.destination); o.start(s); o.stop(s+d+.03);
+}
+function vib(p){ try{ if(on && navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+/* ---------- toast + confetti ---------- */
+function say(txt){
+  if(!tEl){ tEl=document.createElement('div'); tEl.id='fx-toast'; tEl.setAttribute('aria-hidden','true'); document.body.appendChild(tEl); }
+  tEl.textContent=txt; tEl.className=''; void tEl.offsetWidth; tEl.className='show';
+}
+function burst(x,y,n,rain){
+  if(calm) return;
+  var cols=['#F3B62B','#3F65DB','#FF5C8A','#2ED47A','#FFFFFF','#FF8A3D'];
+  for(var i=0;i<n;i++){
+    var p=document.createElement('i'), sz=6+Math.random()*7;
+    p.style.cssText='position:fixed;left:'+(rain?Math.random()*innerWidth:x)+'px;top:'+(rain?-14:y)+'px;width:'+sz+'px;height:'+(sz*(Math.random()<.5?1:.5))+'px;background:'+cols[i%cols.length]+';border-radius:'+(Math.random()<.4?'50%':'2px')+';pointer-events:none;z-index:99';
+    document.body.appendChild(p);
+    var dx=(Math.random()-.5)*(rain?160:260), dy=rain?innerHeight+40:-(60+Math.random()*140), rot=Math.random()*900;
+    var frames=rain
+      ? [{transform:'translate(0,0) rotate(0deg)'},{transform:'translate('+dx+'px,'+dy+'px) rotate('+rot+'deg)'}]
+      : [{transform:'translate(0,0) scale(1)',opacity:1},{transform:'translate('+(dx/2)+'px,'+dy+'px) rotate(200deg)',opacity:1,offset:.45},{transform:'translate('+dx+'px,'+(dy+260)+'px) rotate(500deg)',opacity:0}];
+    var an=p.animate(frames,{duration:rain?1800+Math.random()*1400:900+Math.random()*500,delay:rain?Math.random()*700:0,easing:rain?'ease-in':'cubic-bezier(.2,.7,.4,1)',fill:'forwards'});
+    an.onfinish=(function(el){ return function(){ el.remove(); }; })(p);
+  }
+}
+
+/* ---------- reactions ---------- */
+function good(){
+  combo++;
+  var f=523*Math.pow(1.0595,Math.min(combo,8)*2);
+  tone(f,0,.12,'triangle',.18); tone(f*1.5,.09,.22,'triangle',.18);
+  burst(px,py,combo>=3?28:14); vib(25);
+  say(combo>=3 ? combo+' sunod-sunod! 🔥' : pick(['Galing! 🎉','Tama! 💪','Ayos! ⭐','Sulit! 👏','Boom! 💥']));
+}
+function bad(){
+  combo=0;
+  tone(230,0,.3,'sawtooth',.09,110); vib([40,40,40]);
+  say(pick(['Konti na lang! 💪','Subukan ulit! 😄','Kaya mo yan! 🙌']));
+}
+function win(){
+  var all=document.querySelectorAll('.done .star'), got=document.querySelectorAll('.done .star.on').length;
+  all.forEach(function(s,i){ s.style.animationDelay=(i*.14)+'s'; });
+  [523,659,784,1047].forEach(function(f,i){ tone(f,i*.11,.25,'triangle',.18); });
+  for(var i=0;i<got;i++) tone(880+i*110,.5+i*.14,.2,'sine',.14);
+  if(all.length && got===all.length) tone(1568,.6+got*.14,.5,'triangle',.16);
+  burst(0,0,got?70:20,true); vib([60,40,100]);
+  say(all.length && got===all.length ? 'PERFECT! 🏆' : got ? 'Galing mo! 🎉' : 'Ulit pa tayo! 💪');
+}
+
+/* ---------- detect right / wrong without touching the game code ---------- */
+function marks(){
+  return { s:document.querySelectorAll('.opt.good,.tile.good,.seq li.filled').length,
+           b:document.querySelectorAll('.opt.bad,.tile.bad').length };
+}
+document.addEventListener('pointerdown',function(e){
+  px=e.clientX; py=e.clientY;
+  var b=e.target.closest && e.target.closest('button');
+  if(b && !b.disabled){ unlock(); tone(440,0,.05,'sine',.07,660); }
+},true);
+document.addEventListener('click',function(e){
+  var b=e.target.closest && e.target.closest('button');
+  snap = (b && b.closest('#app') && b.matches('.opt,.tile')) ? { m:marks(), pool:!!b.closest('.pool') } : null;
+},true);
+document.addEventListener('click',function(){
+  if(!snap) return;
+  var a=marks(), s=snap; snap=null;
+  if(a.s>s.m.s) good();
+  else if(a.b>s.m.b) bad();
+  else if(s.pool){ var f=document.querySelector('.feedback.bad'); if(f && f.textContent) bad(); }
+});
+
+/* ---------- sound button + finish celebration ---------- */
+function sndBtn(){
+  var b=document.createElement('button'); b.type='button'; b.className='toggle fxsnd';
+  function up(){ b.textContent=on?'🔊 Sound':'🔇 Sound'; b.setAttribute('aria-pressed',on?'true':'false'); }
+  b.addEventListener('click',function(){
+    on=!on; try{ localStorage.setItem('inspireSound',on?'on':'off'); }catch(e){}
+    up(); if(on){ tone(660,0,.1,'triangle',.15); tone(990,.08,.18,'triangle',.15); }
+  });
+  up(); return b;
+}
+function ensureBtn(){
+  document.querySelectorAll('.tools').forEach(function(t){ if(!t.querySelector('.fxsnd')) t.prepend(sndBtn()); });
+}
+new MutationObserver(function(ms){
+  ensureBtn();
+  for(var i=0;i<ms.length;i++){
+    var n=ms[i].addedNodes;
+    for(var j=0;j<n.length;j++){
+      var x=n[j];
+      if(x.nodeType===1 && (x.classList.contains('done') || x.querySelector('.done'))){ win(); return; }
+    }
+  }
+}).observe(app,{childList:true,subtree:true});
+ensureBtn();
+})();
+</script>
+</html>
