@@ -179,7 +179,10 @@ wordBank:["option","opportunity","schedule","requirement","nervous","confident"]
 ]};
 /* ===================== END OF EDIT AREA ===================== */
 
-var app=document.getElementById('app'),state={view:'home',s:0,a:0,fac:false},progress={},audio=null;
+var app=document.getElementById('app'),state={view:'home',s:0,a:0,fac:false},progress=loadProgress(),audio=null;
+function loadProgress(){var out={};try{var raw=localStorage.getItem('inspireProgress');if(raw){var p=JSON.parse(raw);
+  if(p&&typeof p==='object')for(var k in p){var v=p[k];if(v&&typeof v.earned==='number'&&typeof v.total==='number')out[k]={earned:v.earned,total:v.total};}}}catch(e){}return out;}
+function saveProgress(){try{localStorage.setItem('inspireProgress',JSON.stringify(progress));}catch(e){}}
 function h(tag,props){var el=document.createElement(tag);
   if(props)for(var k in props){var v=props[k];if(v===null||v===undefined||v===false)continue;
     if(k==='class')el.className=v;else if(k.indexOf('on')===0)el.addEventListener(k.slice(2),v);else el.setAttribute(k,v===true?'':v);}
@@ -248,7 +251,7 @@ function materialsView(){
   var input=h('input',{id:'m-q',type:'search',placeholder:'Search: reading, grammar, job, pdf...',autocomplete:'off','aria-label':'Search materials',value:mq,oninput:function(e){mq=e.target.value;draw();}});
   draw();
   return [header('Online Materials','Free Materials & Worksheets','Search, then tap Open or Download. All links are free.'),
-    h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← All sessions'),
+    h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← Home'),
     h('button',{class:'link',type:'button',onclick:function(){go('games');}},'Looking for games? Open Games →'),h('div',{class:'field'},h('label',{for:'m-q'},'Search materials'),input),chips,count,
     h('p',{class:'hint'},'You need internet. Save a PDF on your phone to use it offline. Websites can change, so the facilitator checks the links before the session.'),list];}
 
@@ -294,38 +297,37 @@ function gamesView(){
     return h('section',{class:'card'+(g.k==='grammar'?' cream':'')},h('span',{class:'kicker'},n+' games'),h('h2',null,g.t),h('p',null,g.d),
       h('div',{class:'btns'},h('button',{class:'btn'+(g.k==='grammar'?' gold':''),type:'button',onclick:function(){gmOpen(g.k);}},'Open '+g.t)));});
   return [header('Online Games','Free English Games','Pick a group, choose a game, and play right here.'),
-    h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← All sessions'),
+    h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← Home'),
     h('p',{class:'hint'},'You need internet. If a game stays blank, tap Open in new tab. The facilitator tests the games before the session.'),h('div',{class:'cards'},cards)];}
 function homeView(){
   var cards=CONTENT.sessions.map(function(ses,si){
     return h('section',{class:'card'+(si%2?' cream':'')},
-      h('span',{class:'kicker'},ses.label+' · '+ses.time),h('h2',null,ses.title),h('p',null,ses.blurb),
+      h('h2',null,ses.title),h('p',null,ses.blurb),
       h('ul',null,ses.activities.map(function(act,ai){var p=progress[key(si,ai)];return h('li',null,h('span',null,act.title),p?stars(p.earned,p.total):h('span',{class:'count'},act.minutes+' min'));})),
-      h('div',{class:'btns'},h('button',{class:'btn'+(si%2?' gold':''),type:'button',onclick:function(){go('session',si);}},'Open '+ses.label)));});
+      h('div',{class:'btns'},h('button',{class:'btn'+(si%2?' gold':''),type:'button',onclick:function(){go('session',si);}},'Open activities')));});
   cards.push(h('section',{class:'card cream'},h('span',{class:'kicker'},'Play more'),h('h2',null,'Online Games'),h('p',null,'Free vocabulary and grammar games. Play right here.'),h('div',{class:'btns'},h('button',{class:'btn gold',type:'button',onclick:function(){go('games');}},'Open Games'))));
   cards.push(h('section',{class:'card'},h('span',{class:'kicker'},'After the training'),h('h2',null,'Free Materials & Worksheets'),h('p',null,'Search free reading, listening, grammar and worksheet links you can use anytime.'),h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){go('materials');}},'Open Materials'))));
-  cards.splice(1,0,h('section',{class:'card break'},h('span',{class:'kicker'},'In between'),h('h2',null,CONTENT.healthBreak.title+' 💧'),h('p',null,CONTENT.healthBreak.text)));
   return [header('Project INSPIRE',CONTENT.home.title,CONTENT.home.text),h('div',{class:'cards'},cards)];}
 function sessionView(ses){
   var rows=ses.activities.map(function(act,ai){var p=progress[key(state.s,ai)];
     return h('button',{class:'row',type:'button',onclick:function(){go('activity',state.s,ai);}},
       h('span',{class:'n'},String(ai+1)),h('span',null,h('strong',null,act.title),h('small',null,act.blurb)),
       h('span',{class:'meta'},h('span',null,act.minutes+' min'),p?stars(p.earned,p.total):null));});
-  return [header(ses.label+' · '+ses.time,ses.title,ses.blurb),h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← All sessions'),tipBox(ses.tip),h('div',{class:'rows'},rows)];}
+  return [header(CONTENT.home.title,ses.title,ses.blurb),h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← Home'),tipBox(ses.tip),h('div',{class:'rows'},rows)];}
 var RUNNERS={};
 function activityView(ses,act){
   var box=h('div',{class:'stage'}),ctx={box:box,ses:ses,act:act};
   ctx.finish=function(e,t){finish(ctx,e,t);};
   var run=RUNNERS[act.type];if(run)run(ctx);else box.append(h('p',null,'Unknown activity type: '+act.type));
-  return [header(ses.label,act.title),h('button',{class:'link',type:'button',onclick:function(){go('session');}},'← Back to '+ses.label),h('p',{class:'intro'},act.intro),tipBox(act.tip),box];}
+  return [header(CONTENT.home.title,act.title),h('button',{class:'link',type:'button',onclick:function(){go('session');}},'← Back to activities'),h('p',{class:'intro'},act.intro),tipBox(act.tip),box];}
 function finish(ctx,earned,total){
-  stopAudio();progress[key(state.s,state.a)]={earned:earned,total:total};
+  stopAudio();progress[key(state.s,state.a)]={earned:earned,total:total};saveProgress();
   var ses=ctx.ses,last=state.a>=ses.activities.length-1,ratio=total?earned/total:1;
   var msg=ratio>=0.8?'Great work! You got it on the first try most of the time.':'Good try. Play again to earn more stars.';
   ctx.box.replaceChildren(h('div',{class:'done'},h('h2',null,'Well done!'),stars(earned,total,true),
     h('p',null,'You earned '+earned+' of '+total+' stars. A star means you got it right on the first try.'),h('p',null,msg),
     h('div',{class:'btns'},
-      last?h('button',{class:'btn',type:'button',onclick:function(){go('session');}},'Back to '+ses.label)
+      last?h('button',{class:'btn',type:'button',onclick:function(){go('session');}},'Back to activities')
           :h('button',{class:'btn',type:'button',onclick:function(){go('activity',state.s,state.a+1);}},'Next activity'),
       h('button',{class:'btn ghost',type:'button',onclick:function(){go('activity',state.s,state.a);}},'Play again'))));
   window.scrollTo(0,0);}
