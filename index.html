@@ -5,7 +5,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Poppins:wght@600;700&display=swap">
 <style>
-/* Layout: one narrow column built for phones; bottom tab bar switches Home / Session 1 / Session 2 / Library.
+/* Layout: one narrow column built for phones; bottom tab bar switches Home / Lab / Word lab / Library.
    Palette follows the INSPIRE slides: deep blue, gold rule, pale blue and cream panels. */
 :root{
   --bg:#F6F9FF; --surface:#FFFFFF; --soft:#E8F0FF; --cream:#FFF4D4;
@@ -137,11 +137,27 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
 .lib .tryit{background:var(--soft);border-radius:8px;padding:8px 12px;font-size:.95rem;width:100%}
 .lib .url{font-size:.88rem;color:var(--muted);overflow-wrap:anywhere}
 .facts{margin:0;padding-left:1.2em}
+/* word lab */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cols .opt{font-size:.95rem;padding:10px 12px}
+.cols .opt.sel{border-color:var(--accent);background:var(--soft)}
+.cols .opt .fil{display:block;font-size:.8rem;opacity:.85}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{font-family:var(--display);font-weight:700;font-size:1.2rem;min-width:46px;min-height:50px;border-radius:10px;border:2px solid var(--accent);background:var(--surface);color:var(--accent);cursor:pointer;text-transform:uppercase}
+.tile[disabled]{opacity:.25;cursor:default}
+.boxes{display:flex;flex-wrap:wrap;gap:6px}
+.box{width:38px;height:46px;border-bottom:4px solid var(--gold);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:1.3rem;text-transform:uppercase}
+.how{margin:0;padding-left:1.3em}
+.how li{margin-block:6px}
+.sublist{display:grid;gap:14px}
+.contact{background:var(--soft);border-radius:8px;padding:8px 12px;font-size:.95rem;width:100%;overflow-wrap:anywhere}
+.warn{background:var(--try-bg);color:var(--try);border-radius:12px;padding:14px 16px;font-weight:600}
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:3px solid var(--gold);
   padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-.nav-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.nav-in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
 .tab{font:inherit;font-weight:700;font-size:.82rem;text-decoration:none;color:var(--muted);text-align:center;padding:8px 4px;border-radius:10px;min-height:48px;display:flex;flex-direction:column;justify-content:center;line-height:1.2}
+#play iframe{display:block;width:100%;height:calc(100dvh - 82px);border:0;border-radius:12px;background:var(--bg)}
 .tab small{font-weight:600;font-size:.7rem;opacity:.85}
 .tab[aria-current="page"]{background:var(--soft);color:var(--accent)}
 @media (min-width:640px){.route{grid-template-columns:1fr 1fr}.route .wide{grid-column:1/-1}}
@@ -160,21 +176,21 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
 
       <div class="route">
         <div class="panel soft">
-          <span class="eyebrow">Session 1</span>
-          <h2>Learn the hub</h2>
-          <p>Practice reading buttons, choosing search words, and following online directions.</p>
-          <a class="btn" href="#tour">Start Session 1</a>
-        </div>
-        <div class="panel cream">
-          <span class="eyebrow">Session 2</span>
+          <span class="eyebrow">Today</span>
           <h2>Read, Listen, Respond</h2>
           <p>Use one story to learn new words, read, listen, answer questions, and write.</p>
-          <a class="btn" href="#lab">Start Session 2</a>
+          <a class="btn" href="#lab">Start</a>
+        </div>
+        <div class="panel cream">
+          <span class="eyebrow">Games</span>
+          <h2>Word lab</h2>
+          <p>Match and unscramble words from the story and from real forms.</p>
+          <div class="actions"><a class="btn" href="#wordlab">Play</a><a class="btn ghost" href="#play">More games</a></div>
         </div>
         <div class="panel wide">
           <span class="eyebrow">After today</span>
           <h2>Library</h2>
-          <p>Free websites for TESDA courses, ALS, and English practice.</p>
+          <p>Official links for free TESDA courses and ALS, plus English practice.</p>
           <a class="btn ghost" href="#library">Open the library</a>
         </div>
       </div>
@@ -188,44 +204,14 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
     </div>
   </section>
 
-  <!-- SESSION 1 -->
-  <section class="view" id="tour">
-    <span class="eyebrow">Session 1</span>
-    <h1>Learn the hub</h1>
-    <div class="rule"></div>
-    <div class="stack gap-lg">
-      <p class="lead">Websites use short words on buttons and in directions. Knowing them helps you find what you need. Do the three activities below.</p>
-
-      <div class="panel">
-        <div class="act-head"><h2>1. Read the button</h2></div>
-        <p class="hint">What does each button do? Tap the best answer.</p>
-        <div id="a-btn"></div>
-      </div>
-
-      <div class="panel">
-        <div class="act-head"><h2>2. Pick the search words</h2></div>
-        <p class="hint">Short, clear words find better results. Which words would you type?</p>
-        <div id="a-search"></div>
-      </div>
-
-      <div class="panel">
-        <div class="act-head"><h2>3. Follow the directions</h2></div>
-        <p class="hint">These are the steps to make an account on e-TESDA. Tap the steps in the right order.</p>
-        <div id="a-steps"></div>
-      </div>
-
-      <div class="actions"><a class="btn gold" href="#lab">Go to Session 2</a><a class="btn ghost" href="#home">Back to Home</a></div>
-    </div>
-  </section>
-
   <!-- SESSION 2 -->
   <section class="view" id="lab">
-    <span class="eyebrow">Session 2</span>
+    <span class="eyebrow">Today's lab</span>
     <h1>Read, Listen, Respond</h1>
     <div class="rule"></div>
     <div class="stack gap-lg">
       <p class="lead">Today's resource is a short story: <b>The Road Is Still Open</b>. Do the four steps in order.</p>
-      <div class="tabs-in" id="labsteps" role="tablist" aria-label="Session 2 steps"></div>
+      <div class="tabs-in" id="labsteps" role="tablist" aria-label="Lab steps"></div>
 
       <!-- 1 words -->
       <div class="panel lab-pane" data-pane="0">
@@ -300,33 +286,743 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
     </div>
   </section>
 
+  <!-- WORD LAB -->
+  <section class="view" id="wordlab">
+    <span class="eyebrow">Word lab</span>
+    <h1>Play with words</h1>
+    <div class="rule"></div>
+    <div class="stack gap-lg">
+      <button class="chip" id="sndTgl" type="button" aria-pressed="true" style="align-self:flex-start"></button>
+      <p class="lead">Short games with words from the story and from real forms. A mistake just means try again.</p>
+
+      <div class="panel">
+        <div class="act-head"><h2>Match it</h2></div>
+        <p class="hint">Tap a word. Then tap its meaning.</p>
+        <div id="g-match" style="margin-top:10px"></div>
+      </div>
+
+      <div class="panel">
+        <div class="act-head"><h2>Unscramble</h2></div>
+        <p class="hint">Tap the letters in the right order to spell the word.</p>
+        <div id="g-scr" style="margin-top:10px"></div>
+      </div>
+
+      <div class="panel cream">
+        <h2>More games</h2>
+        <p class="hint">Hub words, search words, follow directions, find the sentence, plus free online games with sound and stars.</p>
+        <div class="actions"><a class="btn gold" href="#play">Play more games</a></div>
+      </div>
+    </div>
+  </section>
+
   <!-- LIBRARY -->
   <section class="view" id="library">
     <span class="eyebrow">Library</span>
     <h1>Keep learning after today</h1>
     <div class="rule"></div>
     <div class="stack gap-lg">
-      <p class="lead">Free places to study. Open them on your phone and try the search words you practiced.</p>
-      <div class="lib" id="liblist"></div>
-      <div class="panel cream">
-        <h2>About ALS</h2>
-        <ul class="facts" style="margin-top:8px">
-          <li>For out-of-school youth and adults who have not finished basic education.</li>
-          <li>Levels: Basic Literacy, Elementary, Junior High School, Senior High School.</li>
-          <li>No fees may be collected for ALS programs.</li>
-        </ul>
-        <p class="hint" style="margin-top:10px">Based on DepEd Order No. 001, s. 2026. Ask your barangay or ALS teacher where to enroll.</p>
-        <p style="margin-top:10px"><a href="https://www.deped.gov.ph/wp-content/uploads/DO_s2026_001r-1.pdf" target="_blank" rel="noopener">Read the DepEd Order (PDF)</a></p>
+      <p class="lead">Official and well-known free sites only. Open them on your phone.</p>
+
+      <div class="route">
+        <div class="panel soft">
+          <span class="eyebrow">Free courses</span>
+          <h2>TESDA Online Program</h2>
+          <p>Free online courses in ICT, tourism, agriculture, construction, and more. Learn on your own time.</p>
+          <div class="actions">
+            <a class="btn" href="https://e-tesda.gov.ph" target="_blank" rel="noopener">Open e-TESDA</a>
+            <a class="btn ghost" href="https://e-tesda.gov.ph/course/" target="_blank" rel="noopener">Browse courses</a>
+          </div>
+        </div>
+        <div class="panel cream">
+          <span class="eyebrow">ALS</span>
+          <h2>Alternative Learning System</h2>
+          <p>DepEd&rsquo;s free program for out-of-school youth and adults who have not finished school.</p>
+          <div class="actions">
+            <a class="btn" href="https://www.deped.gov.ph/become-an-als-learner/" target="_blank" rel="noopener">How to join ALS</a>
+            <a class="btn ghost" href="https://www.deped.gov.ph/als-frequently-asked-questions/" target="_blank" rel="noopener">ALS questions</a>
+          </div>
+        </div>
       </div>
+
+      <div class="panel">
+        <h2>TESDA: how to start</h2>
+        <ol class="how" style="margin-top:10px">
+          <li>Open <b>e-tesda.gov.ph</b> and tap <b>Login</b>.</li>
+          <li>Tap <b>Create an Account</b> and fill in the required fields.</li>
+          <li>Check your email and activate your account.</li>
+          <li>Log in, choose a course, and tap <b>Enroll me in this course</b>.</li>
+        </ol>
+        <p class="hint" style="margin-top:10px">A certificate of completion comes after you finish a course. A National Certificate needs a face-to-face assessment. TESDA mobile app: search for it in Google Play or the App Store.</p>
+        <div class="actions">
+          <a class="btn ghost" href="https://e-tesda.gov.ph/login/signup.php" target="_blank" rel="noopener">Sign up page</a>
+          <a class="btn ghost" href="https://e-tesda.gov.ph/local/staticpage/view.php?page=HowToGuide" target="_blank" rel="noopener">How-to guide</a>
+        </div>
+        <div class="contact" style="margin-top:12px">Questions? TESDA Online Program: (02) 8887 7777 &middot; tesdaonlineprogram@tesda.gov.ph &middot; Main site: www.tesda.gov.ph</div>
+      </div>
+
+      <div class="panel">
+        <h2>ALS: how to join</h2>
+        <ol class="how" style="margin-top:10px">
+          <li>Visit or contact your nearest <b>DepEd District or Division Office</b>, or ask your barangay for the ALS teacher. You can join any time of the year.</li>
+          <li>Take the short assessments (Functional Literacy Test) so your teacher knows what you already know.</li>
+          <li>Make a learning plan with your ALS Learning Facilitator.</li>
+          <li>Learn with modules and activities. Lessons can be face-to-face, distance, or mixed.</li>
+          <li>Take the <b>Accreditation and Equivalency (A&amp;E) Test</b> to move up. Passing can lead to Junior High, Senior High, TESDA, college, or work.</li>
+        </ol>
+        <p class="hint" style="margin-top:10px">Documents often asked for: PSA birth certificate (photocopy) and a 2x2 ID photo, plus Form 137 if you came from a formal school. Requirements can change, so confirm with your ALS teacher. DepEd Order No. 001, s. 2026 says no fees may be collected for ALS programs.</p>
+        <div class="actions">
+          <a class="btn ghost" href="https://deped.gov.ph/ae-test" target="_blank" rel="noopener">About the A&amp;E Test</a>
+          <a class="btn ghost" href="https://www.deped.gov.ph/wp-content/uploads/DO_s2026_001r-1.pdf" target="_blank" rel="noopener">DepEd Order (PDF)</a>
+        </div>
+      </div>
+
+      <div class="panel soft">
+        <h2>Free worksheets and PDFs</h2>
+        <p>Search free reading, listening, grammar and printable worksheets. Tap Download PDF to save one on your phone.</p>
+        <div class="actions"><a class="btn" href="#play">Search free files</a></div>
+      </div>
+
+      <h2>More free resources</h2>
+      <div class="lib" id="liblist"></div>
+
+      <div class="warn">Stay safe: official sites end in <b>.gov.ph</b>. e-TESDA courses are free and ALS programs do not collect fees. If someone asks you to pay to enroll, check first with your barangay or the DepEd or TESDA office.</div>
     </div>
+  </section>
+  <!-- PLAY: games, effects, free files + search (from index.html) -->
+  <section class="view" id="play">
+    <iframe title="Games and free files" loading="lazy" allow="autoplay; fullscreen" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, viewport-fit=cover&quot;&gt;
+&lt;title&gt;INSPIRE Hub Games&lt;/title&gt;
+&lt;meta name=&quot;claude:viewport-fit-sides&quot; content=&quot;cover&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=Lexend:wght@400;500;600&amp;display=swap&quot;&gt;
+&lt;style&gt;
+:root{--bg:#F5F8FE;--surface:#FFFFFF;--ink:#0D1A4A;--muted:#47557F;--primary:#12338F;--on-primary:#FFFFFF;--accent:#12338F;--gold:#F3B62B;--on-gold:#2A1E00;--gold-soft:#FFF4D6;--blue-soft:#E6EFFF;--line:#CBD6F0;--focus:#12338F;--star-off:#D3DBF1;--shadow:rgba(18,51,143,.28);--good:#13663F;--good-soft:#D9F2E4;--bad:#A12A18;--bad-soft:#FBE2DC;--font-display:&#x27;Bricolage Grotesque&#x27;,&#x27;Lexend&#x27;,system-ui,sans-serif;--font-body:&#x27;Lexend&#x27;,system-ui,-apple-system,&#x27;Segoe UI&#x27;,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme=&quot;light&quot;]){--bg:#0A1230;--surface:#131F4A;--ink:#EAF0FF;--muted:#A5B4E3;--primary:#3F65DB;--accent:#A9C0FF;--gold-soft:#33290C;--blue-soft:#15245A;--line:#2B3D7C;--focus:#F3B62B;--star-off:#2B3D7C;--shadow:rgba(0,0,0,.5);--good:#7BE0A9;--good-soft:#12382A;--bad:#FFA392;--bad-soft:#40201B;color-scheme:dark}}
+:root[data-theme=&quot;dark&quot;]{--bg:#0A1230;--surface:#131F4A;--ink:#EAF0FF;--muted:#A5B4E3;--primary:#3F65DB;--accent:#A9C0FF;--gold-soft:#33290C;--blue-soft:#15245A;--line:#2B3D7C;--focus:#F3B62B;--star-off:#2B3D7C;--shadow:rgba(0,0,0,.5);--good:#7BE0A9;--good-soft:#12382A;--bad:#FFA392;--bad-soft:#40201B;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--font-body);-webkit-text-size-adjust:100%}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3{font-family:var(--font-display);margin:0;line-height:1.1;text-wrap:balance;color:var(--accent)}
+h1{font-size:clamp(1.9rem,7vw,2.8rem);font-weight:800;letter-spacing:-.01em}h2{font-size:1.45rem;font-weight:800}h3{font-size:1.15rem;font-weight:600}p{margin:0}
+.shell{max-width:46rem;margin:0 auto;padding-block:20px 48px;display:grid;gap:22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.head{display:grid;gap:14px}.bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between}
+.pill{background:var(--primary);color:var(--on-primary);font-weight:600;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;padding:.6rem .95rem;border-radius:8px;box-shadow:0 4px 10px -6px var(--shadow)}
+.tools{display:flex;align-items:center;gap:10px}.rule{height:4px;border-radius:2px;background:var(--gold)}.sub{color:var(--muted);max-width:38rem}
+.foot{color:var(--muted);font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;padding-top:6px}
+.toggle{min-height:40px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--surface);font-size:.85rem;font-weight:500}
+.toggle[aria-pressed=&quot;true&quot;]{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}
+.total{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.95rem}
+.link{background:none;border:0;padding:8px 0;min-height:44px;color:var(--accent);font-weight:600;text-align:left;justify-self:start}
+.btn{min-height:50px;padding:0 22px;border-radius:10px;border:2px solid transparent;background:var(--primary);color:var(--on-primary);font-weight:600}
+.btn.gold{background:var(--gold);color:var(--on-gold)}.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}.btn.small{min-height:42px;padding:0 14px;font-size:.88rem}
+.btns{display:flex;flex-wrap:wrap;gap:10px}.cards{display:grid;gap:18px}
+.card{background:var(--blue-soft);border-radius:18px;padding:22px;display:grid;gap:14px;box-shadow:0 10px 24px -16px var(--shadow)}.card.cream{background:var(--gold-soft)}
+.card .kicker{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.card ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.92rem}.card li{display:flex;gap:10px;align-items:center;justify-content:space-between}.card li span:first-child{min-width:0}
+.rows{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;min-height:72px;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);text-align:left}
+.row .n{width:38px;height:38px;border-radius:10px;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;font-weight:600}
+.row strong{display:block;font-weight:600}.row small{display:block;color:var(--muted);font-size:.82rem;line-height:1.35}
+.meta{display:grid;justify-items:end;gap:4px;font-size:.78rem;color:var(--muted);white-space:nowrap}
+.stars{display:inline-flex;flex-wrap:wrap;gap:2px}.star{display:inline-flex;width:20px;height:20px;color:var(--star-off)}.star.on{color:var(--gold)}.star svg{width:100%;height:100%;fill:currentColor}.big .star{width:34px;height:34px}
+.stage{display:grid;gap:16px}.intro{color:var(--muted)}
+.tip{display:none;white-space:pre-line;background:var(--gold-soft);border-left:5px solid var(--gold);border-radius:6px 12px 12px 6px;padding:12px 16px;font-size:.9rem}body.fac .tip{display:block}
+.tip b{display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.prompt{font-size:1.15rem;font-weight:500}.count{font-size:.85rem;color:var(--muted);font-weight:500}
+.toolrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.hint{background:var(--blue-soft);border-radius:10px;padding:10px 14px;font-size:.92rem}
+.feedback{border-radius:10px;padding:10px 14px;font-size:.95rem}.feedback:empty{display:none}
+.feedback.good{background:var(--good-soft);color:var(--good)}.feedback.bad{background:var(--bad-soft);color:var(--bad)}.feedback.info{background:var(--blue-soft);color:var(--ink)}
+.opts{display:grid;gap:10px}
+.opt{width:100%;min-height:54px;padding:12px 16px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-weight:500;text-align:left;line-height:1.35}
+.opt:disabled{cursor:default}.opt:disabled:not(.good):not(.bad){opacity:.55}
+.opt.good{border-color:var(--good);background:var(--good-soft);color:var(--good)}.opt.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+@media (prefers-reduced-motion:no-preference){.opt.bad,.tile.bad{animation:shake .28s}}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pairs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.col{display:grid;gap:10px;align-content:start}
+.tile{display:grid;gap:6px;align-content:center;min-height:62px;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);text-align:left;font-size:.92rem;line-height:1.35;overflow-wrap:anywhere}
+.tile.term{font-weight:600;font-size:1.02rem;color:var(--accent)}.tile.sel{border-color:var(--gold);background:var(--gold-soft);color:var(--ink)}
+.tile.good{border-color:var(--good);background:var(--good-soft);color:var(--good)}.tile.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.tile:disabled{cursor:default}.tile .tl{font-size:.8rem;font-weight:400;color:var(--muted)}.tile.good .tl{color:inherit}
+.seq{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:8px}
+.seq li{counter-increment:s;display:flex;gap:12px;align-items:center;min-height:50px;padding:8px 12px;border-radius:12px;border:2px dashed var(--line);color:var(--muted)}
+.seq li::before{content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:var(--line);color:var(--ink);display:grid;place-items:center;font-weight:600;font-size:.85rem}
+.seq li.filled{border-style:solid;border-color:var(--good);background:var(--good-soft);color:var(--good)}.seq li.filled::before{background:var(--good);color:var(--good-soft)}
+.pool{display:grid;gap:10px}
+.player{display:grid;gap:12px;background:var(--blue-soft);border-radius:16px;padding:16px}.story{background:var(--surface);border-radius:12px;padding:14px;font-size:1rem}
+.field{display:grid;gap:6px}.field label{font-weight:600;font-size:.9rem}
+.field input,.field textarea{width:100%;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.field textarea{min-height:9.5rem;resize:vertical;line-height:1.5}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{min-height:42px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--surface);font-size:.9rem;font-weight:500}.chip.word{border-color:var(--gold)}
+.label-s{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.92rem}.checks li{display:flex;gap:10px;align-items:center;color:var(--muted)}
+.checks li::before{content:&quot;&quot;;flex:none;width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.72rem;line-height:1}
+.checks li.ok{color:var(--ink)}.checks li.ok::before{content:&quot;\2713&quot;;background:var(--good);border-color:var(--good);color:var(--surface)}
+.out{background:var(--primary);color:var(--on-primary);border-radius:18px;padding:22px;display:grid;gap:12px;user-select:text;-webkit-user-select:text}
+.out .who{font-family:var(--font-display);font-weight:800;font-size:1.35rem}.out hr{border:0;height:4px;width:64px;border-radius:2px;background:var(--gold);margin:0}
+.out p{white-space:pre-wrap;overflow-wrap:anywhere}.out .tag{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.done{display:grid;gap:14px;justify-items:start;background:var(--blue-soft);border-radius:18px;padding:24px}
+.card.break{background:var(--surface);border:2px dashed var(--line);box-shadow:none}
+.gm-ov{position:fixed;inset:0;z-index:200;background:rgba(5,12,40,.72);display:grid;place-items:center}
+.gm-box{background:var(--surface);color:var(--ink);width:100%;max-width:60rem;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+@media(min-width:760px){.gm-ov{padding:20px}.gm-box{height:min(92vh,900px);border-radius:18px}}
+.gm-top{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;border-bottom:2px solid var(--line)}.gm-top h2{margin:0;font-size:1.05rem}.gm-act{display:flex;gap:8px;flex-wrap:wrap}
+.gm-body{overflow:auto;padding:14px;display:grid;gap:10px;align-content:start}
+.gm-play{padding:0;gap:0;grid-template-rows:auto minmax(0,1fr);overflow:hidden;align-content:stretch}.gm-play .hint{border-radius:0;font-size:.82rem;padding:6px 12px}
+.gm-frame{width:100%;height:100%;border:0;background:var(--surface)}
+a.btn{display:inline-grid;place-items:center;text-decoration:none;text-align:center}.chip.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}.card.mat h2{font-size:1.1rem}
+&lt;/style&gt;
+
+&lt;div id=&quot;app&quot; class=&quot;shell&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+(function(){
+&#x27;use strict&#x27;;
+/* EDIT HERE: all the words in the games. For multiple-choice, &quot;answer&quot; must be EXACTLY one of the &quot;options&quot;.
+   For the Listen game, put your own audio file name in audioUrl (example &quot;story.mp3&quot;); if empty, the phone reads aloud. */
+var STORY=[&quot;Luca is 19 years old.&quot;,&quot;He stopped school when his family had money problems.&quot;,&quot;One rainy day, he saw a poster at the barangay hall.&quot;,&quot;The poster said, “You still have options.”&quot;,&quot;Luca was nervous, but he saved the phone number.&quot;,&quot;After some time, he made the call and asked, “Can I still study?”&quot;,&quot;The answer was, “Of course.”&quot;,&quot;Now Luca joins learning sessions.&quot;,&quot;He is no longer afraid to ask questions.&quot;];
+var CONTENT={
+brand:&quot;Project INSPIRE · Language for Life&quot;,
+home:{title:&quot;Hub Games&quot;,text:&quot;Play in pairs. One person reads, the other taps. Mistakes are okay. Try again until you get it.&quot;},
+healthBreak:{title:&quot;Health Break&quot;,text:&quot;Stretch, drink water, and rest. See you in Session 2!&quot;},
+sessions:[
+{label:&quot;Session 1&quot;,time:&quot;8:30–10:00 AM&quot;,title:&quot;Online Learning Hub Orientation&quot;,
+blurb:&quot;“Language Learning Beyond the Classroom.” Get to know hub access, navigation, search, and the learning materials. Practice reading interface text, following digital directions, and choosing accurate search words.&quot;,
+tip:&quot;Use these games between your live hub demo. Show the real hub screen first, then let them play.\nSAY: “You already know more digital English than you think.”&quot;,
+activities:[
+{type:&quot;match&quot;,title:&quot;Hub Words&quot;,minutes:8,blurb:&quot;Match each word from the hub and other apps to its meaning.&quot;,intro:&quot;Tap a word on the left. Then tap its meaning on the right.&quot;,
+tip:&quot;ASK: “Which of these words have you already seen on your phone?” [PAUSE for 2–3 answers]\nSAY: “These words are on almost every website and app.”\nTRANSITION: “Now let us use them.”&quot;,
+pairs:[
+{term:&quot;Log in&quot;,meaning:&quot;Enter your account with your username and password.&quot;,tl:&quot;Pumasok sa account mo gamit ang username at password.&quot;},
+{term:&quot;Search&quot;,meaning:&quot;Look for a lesson, a file, or a word.&quot;,tl:&quot;Maghanap ng aralin, file, o salita.&quot;},
+{term:&quot;Menu&quot;,meaning:&quot;A list of choices on the screen.&quot;,tl:&quot;Listahan ng mga pagpipilian sa screen.&quot;},
+{term:&quot;Download&quot;,meaning:&quot;Save a file on your phone.&quot;,tl:&quot;I-save ang file sa phone mo.&quot;},
+{term:&quot;Submit&quot;,meaning:&quot;Send your answer or your work.&quot;,tl:&quot;Ipadala ang sagot o gawa mo.&quot;},
+{term:&quot;Back&quot;,meaning:&quot;Go to the page before.&quot;,tl:&quot;Bumalik sa nakaraang pahina.&quot;}]},
+{type:&quot;match&quot;,title:&quot;Hub Materials&quot;,minutes:6,blurb:&quot;Match each kind of lesson to what you can do with it.&quot;,intro:&quot;Tap a lesson type on the left. Then tap what you can do with it on the right.&quot;,
+pairs:[
+{term:&quot;Reading lessons&quot;,meaning:&quot;Read short stories and texts.&quot;,tl:&quot;Magbasa ng maikling kuwento at teksto.&quot;},
+{term:&quot;Listening lessons&quot;,meaning:&quot;Listen to audio and answer questions.&quot;,tl:&quot;Makinig sa audio at sagutin ang mga tanong.&quot;},
+{term:&quot;Vocabulary lists&quot;,meaning:&quot;Learn new words for work and daily life.&quot;,tl:&quot;Matuto ng bagong salita para sa trabaho at araw-araw.&quot;},
+{term:&quot;Writing guides&quot;,meaning:&quot;Learn to write letters and short messages.&quot;,tl:&quot;Matutong sumulat ng liham at maikling mensahe.&quot;},
+{term:&quot;Grammar lessons&quot;,meaning:&quot;Learn how to build correct sentences.&quot;,tl:&quot;Matutong bumuo ng tamang pangungusap.&quot;},
+{term:&quot;Worksheets&quot;,meaning:&quot;Download and practice on your phone.&quot;,tl:&quot;I-download at magsanay sa phone mo.&quot;}]},
+{type:&quot;choice&quot;,title:&quot;What Should I Tap?&quot;,minutes:10,blurb:&quot;Read the situation. Choose the right button or message.&quot;,intro:&quot;Read each situation. Choose the best answer.&quot;,
+tip:&quot;SAY: “Some screens are from other websites and apps, not only our hub.” (Our hub has no log in.)\nLet pairs discuss for 10 seconds before they tap. Ask one pair to explain why an answer is right.&quot;,
+questions:[
+{prompt:&quot;You want to find a lesson about job interviews. Which button do you use?&quot;,options:[&quot;Search&quot;,&quot;Log out&quot;,&quot;Submit&quot;,&quot;Download&quot;],answer:&quot;Search&quot;,why:&quot;Search helps you look for lessons and files.&quot;,hint:&quot;Naghahanap ka ng aralin. Anong button ang pang-hanap?&quot;},
+{prompt:&quot;You finished your answers. Which button sends them?&quot;,options:[&quot;Back&quot;,&quot;Submit&quot;,&quot;Menu&quot;,&quot;Search&quot;],answer:&quot;Submit&quot;,why:&quot;Submit means send.&quot;,hint:&quot;Tapos mo na ang sagot. Alin ang magpapadala nito?&quot;},
+{prompt:&quot;You opened the wrong lesson by mistake. What do you tap to return?&quot;,options:[&quot;Back&quot;,&quot;Download&quot;,&quot;Submit&quot;,&quot;Log in&quot;],answer:&quot;Back&quot;,why:&quot;Back takes you to the page before.&quot;,hint:&quot;Gusto mong bumalik sa nakaraang pahina.&quot;},
+{prompt:&quot;You want to keep a worksheet on your phone for later. What do you tap?&quot;,options:[&quot;Download&quot;,&quot;Search&quot;,&quot;Back&quot;,&quot;Help&quot;],answer:&quot;Download&quot;,why:&quot;Download saves the file on your phone.&quot;,hint:&quot;Gusto mong i-save ang file sa phone mo.&quot;},
+{prompt:&quot;The screen says: “Incorrect password. Please try again.” What should you do?&quot;,options:[&quot;Type your password again carefully.&quot;,&quot;Ignore the message and wait.&quot;,&quot;Tap Download.&quot;,&quot;Log out of your phone.&quot;],answer:&quot;Type your password again carefully.&quot;,why:&quot;“Incorrect” means not correct. “Try again” means do it one more time.&quot;,hint:&quot;Ang “Incorrect” ay mali. Ang “try again” ay subukan muli.&quot;},
+{prompt:&quot;The screen says: “Your file is uploading. Please wait.” What is happening?&quot;,options:[&quot;The hub is receiving your file.&quot;,&quot;Your file was deleted.&quot;,&quot;Your password is wrong.&quot;,&quot;The lesson is finished.&quot;],answer:&quot;The hub is receiving your file.&quot;,why:&quot;Upload means sending a file from your phone to the hub.&quot;,hint:&quot;Ang “upload” ay pagpapadala ng file mula sa phone papunta sa hub.&quot;}]},
+{type:&quot;order&quot;,title:&quot;Follow the Directions&quot;,minutes:8,blurb:&quot;Put the steps in the right order.&quot;,intro:&quot;Tap the step that comes first. Then the next one. Keep going until the list is complete.&quot;,
+tip:&quot;SAY: “Digital directions are short commands. Read the first word of each step.”\nPoint out the action words: open, tap, type, choose, check.&quot;,
+rounds:[
+{title:&quot;Open a lesson on the hub&quot;,hint:&quot;Pindutin ang unang hakbang, tapos ang susunod.&quot;,steps:[&quot;Open the Online Learning Hub.&quot;,&quot;Tap the Search bar.&quot;,&quot;Type a keyword and tap Search.&quot;,&quot;Choose a lesson from the results.&quot;,&quot;Tap Open to start the lesson.&quot;]},
+{title:&quot;Send your answer&quot;,hint:&quot;Ano ang una mong gagawin bago mag-type?&quot;,steps:[&quot;Read the question carefully.&quot;,&quot;Type your answer in the box.&quot;,&quot;Check your spelling.&quot;,&quot;Tap Submit.&quot;,&quot;Wait for the message: Answer received.&quot;]}]},
+{type:&quot;choice&quot;,title:&quot;Pick the Best Search Words&quot;,minutes:10,blurb:&quot;Choose the words that will find the right lesson.&quot;,intro:&quot;Good search words are specific. Use two to four words. Check your spelling.&quot;,
+tip:&quot;ASK: “Why is one word not enough?”\nSAY: “Too short gives too many results. Too long gives none.”\nAfter the game, let them search one real topic on the hub.&quot;,
+questions:[
+{prompt:&quot;You want a short story to practice reading. Which search words are best?&quot;,options:[&quot;story&quot;,&quot;short story reading practice&quot;,&quot;I want something to read please thank you&quot;,&quot;read&quot;],answer:&quot;short story reading practice&quot;,why:&quot;Two to four specific words work best. “story” is too wide. A full sentence is too long.&quot;,hint:&quot;Piliin ang tiyak na salita. Hindi masyadong maikli, hindi masyadong mahaba.&quot;},
+{prompt:&quot;You need help writing a job application letter. Which search words are best?&quot;,options:[&quot;letter&quot;,&quot;help&quot;,&quot;job application letter&quot;,&quot;I need help with writing&quot;],answer:&quot;job application letter&quot;,why:&quot;These words name exactly what you need.&quot;,hint:&quot;Anong eksaktong aralin ang kailangan mo?&quot;},
+{prompt:&quot;You want to practice listening in English. Which search words are best?&quot;,options:[&quot;English&quot;,&quot;listening&quot;,&quot;I like English audio things&quot;,&quot;English listening practice&quot;],answer:&quot;English listening practice&quot;,why:&quot;It says the language and the skill and the purpose.&quot;,hint:&quot;Isama ang wika at ang kasanayan.&quot;},
+{prompt:&quot;You want to learn words about work. Which search words are best?&quot;,options:[&quot;words&quot;,&quot;I need work&quot;,&quot;work vocabulary&quot;,&quot;vocab&quot;],answer:&quot;work vocabulary&quot;,why:&quot;“Vocabulary” means words you learn. “Work vocabulary” is clear and short.&quot;,hint:&quot;Ang “vocabulary” ay mga salitang pinag-aaralan.&quot;},
+{prompt:&quot;You want a lesson about grammar. Which spelling will find it?&quot;,options:[&quot;grammer&quot;,&quot;gramar&quot;,&quot;grammar&quot;,&quot;grammmar&quot;],answer:&quot;grammar&quot;,why:&quot;One wrong letter can give you no results. Always check your spelling.&quot;,hint:&quot;Tingnan nang mabuti ang bawat letra.&quot;}]}
+]},
+{label:&quot;Session 2&quot;,time:&quot;10:15–11:00 AM&quot;,title:&quot;Guided Digital Language Learning Lab&quot;,
+blurb:&quot;“Read, Listen, Respond.” Using one hub resource: learn words in context, read and listen, then write a short response.&quot;,
+tip:&quot;The story is a short version of “The Road Is Still Open.” To use another hub resource, edit STORY and also the questions, vocabulary, listening questions and word bank in Session 2.\nOrder: read the story, words, listen, write.&quot;,
+activities:[
+{type:&quot;find&quot;,title:&quot;Find the Sentence&quot;,minutes:8,blurb:&quot;Read the story. Tap the sentence that answers each question.&quot;,intro:&quot;Read the story first. Then tap the sentence that answers the question.&quot;,
+tip:&quot;SAY: “Good readers look for proof in the text.”\nAsk: “Which word in the sentence told you?”&quot;,passage:STORY,
+rounds:[
+{prompt:&quot;Tap the sentence that shows why Luca stopped school.&quot;,answer:STORY[1],hint:&quot;Hanapin ang dahilan kung bakit huminto si Luca.&quot;},
+{prompt:&quot;Tap the sentence that shows Luca was nervous.&quot;,answer:STORY[4],hint:&quot;Hanapin ang salitang nagpapakita ng kaba.&quot;},
+{prompt:&quot;Tap the sentence that proves Luca is changing.&quot;,answer:STORY[8],hint:&quot;Ano ang hindi na ginagawa ni Luca dahil sa takot?&quot;}]},
+{type:&quot;choice&quot;,title:&quot;Word in Context&quot;,minutes:8,blurb:&quot;Choose the word that fits the sentence.&quot;,
+intro:&quot;Remember the story of Luca? Read the sentence. Choose the word that fits. Tap \u201CShow the story\u201D if you need it.&quot;,storyRef:STORY,
+tip:&quot;Before each question, ask: “What clue in the sentence helps you?”\nPraise the clue, not only the answer.&quot;,
+questions:[
+{prompt:&quot;Luca felt ____ before he made the phone call. His heart was beating fast.&quot;,options:[&quot;nervous&quot;,&quot;sleepy&quot;,&quot;proud&quot;],answer:&quot;nervous&quot;,why:&quot;Nervous means worried or afraid before something important.&quot;,hint:&quot;nervous = kinakabahan&quot;},
+{prompt:&quot;The person on the phone explained the ____: Monday to Friday, 8:00 AM.&quot;,options:[&quot;schedule&quot;,&quot;weather&quot;,&quot;mirror&quot;],answer:&quot;schedule&quot;,why:&quot;A schedule tells you the days and the times.&quot;,hint:&quot;schedule = iskedyul&quot;},
+{prompt:&quot;To join the program, you must bring a valid ID. This is a ____.&quot;,options:[&quot;requirement&quot;,&quot;rainstorm&quot;,&quot;birthday&quot;],answer:&quot;requirement&quot;,why:&quot;A requirement is something you must have or must do.&quot;,hint:&quot;requirement = kailangang dalhin o gawin&quot;},
+{prompt:&quot;Joining a learning program is a good ____ for Luca. It is a chance to start again.&quot;,options:[&quot;opportunity&quot;,&quot;opinion&quot;,&quot;opposite&quot;],answer:&quot;opportunity&quot;,why:&quot;An opportunity is a chance to do something good.&quot;,hint:&quot;opportunity = pagkakataon&quot;},
+{prompt:&quot;After many sessions, Luca felt more ____ when he spoke in class.&quot;,options:[&quot;confident&quot;,&quot;confused&quot;,&quot;absent&quot;],answer:&quot;confident&quot;,why:&quot;Confident means you believe you can do it.&quot;,hint:&quot;confident = may tiwala sa sarili&quot;}]},
+{type:&quot;choice&quot;,title:&quot;Listen and Answer&quot;,minutes:8,blurb:&quot;Listen to the story. Answer without reading.&quot;,intro:&quot;Tap Play and listen. You can play it again. Then answer the questions.&quot;,
+tip:&quot;Play it twice. First time: just listen. Second time: listen for the answers.\nIf the phone cannot read aloud, play your own recording or read it yourself.&quot;,
+listen:{text:STORY.join(&quot; &quot;),audioUrl:&quot;&quot;},
+questions:[
+{prompt:&quot;Where did Luca see the poster?&quot;,options:[&quot;At the barangay hall&quot;,&quot;At school&quot;,&quot;At the market&quot;,&quot;At home&quot;],answer:&quot;At the barangay hall&quot;,why:&quot;The story says he saw a poster at the barangay hall.&quot;,hint:&quot;Pakinggan ulit. Pindutin ang Play.&quot;},
+{prompt:&quot;What did Luca ask on the phone?&quot;,options:[&quot;Can I still study?&quot;,&quot;Where is the market?&quot;,&quot;What time is it?&quot;,&quot;Can I borrow money?&quot;],answer:&quot;Can I still study?&quot;,why:&quot;He asked, “Can I still study?” and the answer was, “Of course.”&quot;,hint:&quot;Pakinggan ang tanong ni Luca.&quot;},
+{prompt:&quot;How does Luca feel about asking questions now?&quot;,options:[&quot;He is not afraid to ask.&quot;,&quot;He never asks.&quot;,&quot;He feels ashamed.&quot;,&quot;He asks only his mother.&quot;],answer:&quot;He is not afraid to ask.&quot;,why:&quot;The last line says he is no longer afraid to ask questions.&quot;,hint:&quot;Pakinggan ang huling pangungusap.&quot;}]},
+{type:&quot;write&quot;,title:&quot;My Response&quot;,minutes:10,blurb:&quot;Write two or three sentences. Make your own card.&quot;,
+intro:&quot;Luca took one small step. What is one step you can take after today? Write two or three sentences.&quot;,
+tip:&quot;SAY: “No one will correct your grammar today. We are practicing confidence.”\nLet two or three volunteers read their card aloud.&quot;,
+prompt:&quot;What is one step you can take after today?&quot;,starters:[&quot;One step I can take is&quot;,&quot;After today, I will&quot;,&quot;An opportunity for me is&quot;,&quot;I want to learn&quot;],
+wordBank:[&quot;option&quot;,&quot;opportunity&quot;,&quot;schedule&quot;,&quot;requirement&quot;,&quot;nervous&quot;,&quot;confident&quot;],minWords:8}
+]}
+]};
+/* ===================== END OF EDIT AREA ===================== */
+
+var app=document.getElementById(&#x27;app&#x27;),state={view:&#x27;home&#x27;,s:0,a:0,fac:false},progress=loadProgress(),audio=null;
+function loadProgress(){var out={};try{var raw=localStorage.getItem(&#x27;inspireProgress&#x27;);if(raw){var p=JSON.parse(raw);
+  if(p&amp;&amp;typeof p===&#x27;object&#x27;)for(var k in p){var v=p[k];if(v&amp;&amp;typeof v.earned===&#x27;number&#x27;&amp;&amp;typeof v.total===&#x27;number&#x27;)out[k]={earned:v.earned,total:v.total};}}}catch(e){}return out;}
+function saveProgress(){try{localStorage.setItem(&#x27;inspireProgress&#x27;,JSON.stringify(progress));}catch(e){}}
+function h(tag,props){var el=document.createElement(tag);
+  if(props)for(var k in props){var v=props[k];if(v===null||v===undefined||v===false)continue;
+    if(k===&#x27;class&#x27;)el.className=v;else if(k.indexOf(&#x27;on&#x27;)===0)el.addEventListener(k.slice(2),v);else el.setAttribute(k,v===true?&#x27;&#x27;:v);}
+  (function add(l){l.forEach(function(c){if(c===null||c===undefined||c===false)return;if(Array.isArray(c))return add(c);el.append(c.nodeType?c:document.createTextNode(String(c)));});})(Array.prototype.slice.call(arguments,2));
+  return el;}
+function put(el){el.replaceChildren.apply(el,Array.prototype.slice.call(arguments,1).filter(function(k){return k!==null&amp;&amp;k!==undefined&amp;&amp;k!==false;}));}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i&gt;0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function starIcon(on){var s=document.createElement(&#x27;span&#x27;);s.className=&#x27;star&#x27;+(on?&#x27; on&#x27;:&#x27;&#x27;);s.innerHTML=&#x27;&lt;svg viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;&lt;polygon points=&quot;12,2 14.9,8.6 22,9.3 16.6,14 18.2,21 12,17.3 5.8,21 7.4,14 2,9.3 9.1,8.6&quot;/&gt;&lt;/svg&gt;&#x27;;return s;}
+function stars(e,t,big){var w=h(&#x27;span&#x27;,{class:&#x27;stars&#x27;+(big?&#x27; big&#x27;:&#x27;&#x27;),role:&#x27;img&#x27;,&#x27;aria-label&#x27;:e+&#x27; of &#x27;+t+&#x27; stars&#x27;});for(var i=0;i&lt;t;i++)w.append(starIcon(i&lt;e));return w;}
+function key(s,a){return s+&#x27;-&#x27;+a;}
+function totalStars(){var n=0;for(var k in progress)n+=progress[k].earned;return n;}
+function stopAudio(){try{if(&#x27;speechSynthesis&#x27; in window)window.speechSynthesis.cancel();}catch(e){}if(audio){try{audio.pause();}catch(e){}audio=null;}}
+function go(view,s,a){stopAudio();state.view=view;if(s!==undefined)state.s=s;if(a!==undefined)state.a=a;render();window.scrollTo(0,0);}
+
+function header(label,title,sub){
+  var tot=totalStars();
+  return h(&#x27;header&#x27;,{class:&#x27;head&#x27;},
+    h(&#x27;div&#x27;,{class:&#x27;bar&#x27;},h(&#x27;span&#x27;,{class:&#x27;pill&#x27;},label),h(&#x27;div&#x27;,{class:&#x27;tools&#x27;},tot&gt;0?h(&#x27;span&#x27;,{class:&#x27;total&#x27;,&#x27;aria-label&#x27;:tot+&#x27; stars earned&#x27;},starIcon(true),String(tot)):null)),
+    h(&#x27;h1&#x27;,null,title),h(&#x27;div&#x27;,{class:&#x27;rule&#x27;}),sub?h(&#x27;p&#x27;,{class:&#x27;sub&#x27;},sub):null);}
+function tipBox(t){return null;}
+function footer(){return h(&#x27;p&#x27;,{class:&#x27;foot&#x27;},CONTENT.brand);}
+function render(){
+  var ses=CONTENT.sessions[state.s],act=ses&amp;&amp;ses.activities[state.a],nodes;
+  if(state.view===&#x27;home&#x27;)nodes=homeView();else if(state.view===&#x27;materials&#x27;)nodes=materialsView();else if(state.view===&#x27;games&#x27;)nodes=gamesView();else if(state.view===&#x27;session&#x27;)nodes=sessionView(ses);else nodes=activityView(ses,act);
+  app.replaceChildren.apply(app,nodes.concat([footer()]).filter(Boolean));}
+
+
+/* ---------- Online Materials (free links, checked Oct 2026) ---------- */
+var BC=&quot;https://learnenglish.britishcouncil.org/free-resources/&quot;,PEG=&quot;https://www.perfect-english-grammar.com/support-files/&quot;;
+var MATS=[
+{t:&quot;A1 Reading&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A1&quot;,y:&quot;web&quot;,c:[&quot;Reading&quot;],d:&quot;Simpleng babasahin: poster, mensahe, form, timetable. May mga tanong na masasagutan agad.&quot;,u:BC+&quot;reading/a1&quot;},
+{t:&quot;A2 Reading&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A2&quot;,y:&quot;web&quot;,c:[&quot;Reading&quot;],d:&quot;Email, imbitasyon, tips, at notices. Medyo mas mahaba kaysa A1.&quot;,u:BC+&quot;reading/a2&quot;},
+{t:&quot;Reading with worksheets&quot;,s:&quot;British Council LearnEnglish Teens&quot;,l:&quot;A1-A2&quot;,y:&quot;web&quot;,c:[&quot;Reading&quot;,&quot;Worksheets&quot;],d:&quot;Para sa teens pero puwede sa lahat. Maraming lesson ang may worksheet at sagot na puwedeng i-download.&quot;,u:&quot;https://learnenglishteens.britishcouncil.org/skills/reading&quot;},
+{t:&quot;A1 Listening&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A1&quot;,y:&quot;web&quot;,c:[&quot;Listening&quot;],d:&quot;Makinig sa maiikling usapan at sagutin ang mga tanong.&quot;,u:BC+&quot;listening/a1&quot;},
+{t:&quot;A2 Listening&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A2&quot;,y:&quot;web&quot;,c:[&quot;Listening&quot;],d:&quot;Makinig sa pang-araw-araw na usapan at sagutin ang mga tanong.&quot;,u:BC+&quot;listening/a2&quot;},
+{t:&quot;A1-A2 Vocabulary&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A1-A2&quot;,y:&quot;web&quot;,c:[&quot;Vocabulary&quot;],d:&quot;Mga salita para sa araw-araw, may exercises.&quot;,u:BC+&quot;vocabulary/a1-a2&quot;},
+{t:&quot;A1-A2 Grammar&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A1-A2&quot;,y:&quot;web&quot;,c:[&quot;Grammar&quot;],d:&quot;Maikling paliwanag at exercises sa grammar.&quot;,u:BC+&quot;grammar/a1-a2&quot;},
+{t:&quot;A1 Writing&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A1&quot;,y:&quot;web&quot;,c:[&quot;Writing&quot;],d:&quot;Magsanay sumulat ng maiikling mensahe at impormasyon.&quot;,u:BC+&quot;writing/a1&quot;},
+{t:&quot;A2 Writing&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;A2&quot;,y:&quot;web&quot;,c:[&quot;Writing&quot;],d:&quot;Magsanay sumulat ng mga mensahe at maikling teksto.&quot;,u:BC+&quot;writing/a2&quot;},
+{t:&quot;You&#x27;re Hired: job interview videos&quot;,s:&quot;British Council LearnEnglish&quot;,l:&quot;B1-B2&quot;,y:&quot;vid&quot;,c:[&quot;Job &amp; Work&quot;,&quot;Listening&quot;],d:&quot;Video series tungkol sa pag-apply at interview, may transcript at exercises. Mas mahirap, para sa handa na.&quot;,u:BC+&quot;business/youre-hired&quot;,k:&quot;interview application trabaho job&quot;},
+{t:&quot;Present Simple with be: Positive&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Beginner&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;Printable na ehersisyo, may sagot. I am, you are, he is.&quot;,u:PEG+&quot;present_simple_form_be_positive.pdf&quot;},
+{t:&quot;Present Simple with be: Questions&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Beginner&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;Yes/No questions gamit ang be. May sagot.&quot;,u:PEG+&quot;present_simple_form_be_yes-no-questions.pdf&quot;},
+{t:&quot;Present Simple: Positive (other verbs)&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Beginner&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;I work, she works. Printable, may sagot.&quot;,u:PEG+&quot;present_simple_form_other-verbs_positive_1.pdf&quot;},
+{t:&quot;Past Simple with be: Positive and Negative&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Beginner&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;was at were. Printable, may sagot.&quot;,u:PEG+&quot;past_simple_form_with_be_positive_and_negative.pdf&quot;},
+{t:&quot;50 Irregular Verbs: Past Simple 1&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Elementary&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Vocabulary&quot;,&quot;Worksheets&quot;],d:&quot;Mga karaniwang irregular verb (went, saw, had). May sagot.&quot;,u:PEG+&quot;50_irregular_verbs_past_simple_part_1.pdf&quot;},
+{t:&quot;Prepositions of Place 1&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Beginner&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;in, on, at, under, next to. Printable, may sagot.&quot;,u:PEG+&quot;prepositions_of_place_1.pdf&quot;},
+{t:&quot;Prepositions of Time 1&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Beginner&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;in, on, at para sa oras at petsa. Printable, may sagot.&quot;,u:PEG+&quot;prepositions_of_time_1.pdf&quot;},
+{t:&quot;Some and Any: Exercise 1&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;Beginner&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;Kailan gagamitin ang some at any. May sagot.&quot;,u:PEG+&quot;some-and-any-exercise-1.pdf&quot;},
+{t:&quot;All Tenses: Summary Sheet&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;All&quot;,y:&quot;pdf&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;Isang pahinang buod ng lahat ng tenses. Puwedeng i-print.&quot;,u:PEG+&quot;all_tenses_form_cheatsheet.pdf&quot;},
+{t:&quot;All free grammar PDFs (full list)&quot;,s:&quot;Perfect English Grammar&quot;,l:&quot;All&quot;,y:&quot;web&quot;,c:[&quot;Grammar&quot;,&quot;Worksheets&quot;],d:&quot;Lahat ng libreng PDF sa isang pahina. Pumili ng topic at i-download.&quot;,u:&quot;https://www.perfect-english-grammar.com/english-language-pdf.html&quot;},
+{t:&quot;ALS Learning Resources&quot;,s:&quot;DepEd LRMDS&quot;,l:&quot;ALS&quot;,y:&quot;web&quot;,c:[&quot;DepEd ALS&quot;],d:&quot;Libreng modules ng DepEd para sa out-of-school youth at adults. Hanapin ang English at Communication Skills.&quot;,u:&quot;https://lrmds.deped.gov.ph/als/0&quot;,k:&quot;osy alternative learning system module filipino&quot;},
+{t:&quot;ALS Communication Skills (Advance Elementary)&quot;,s:&quot;DepEd LRMDS&quot;,l:&quot;ALS&quot;,y:&quot;web&quot;,c:[&quot;DepEd ALS&quot;],d:&quot;English communication skills module ng ALS. Buksan ang page para sa file.&quot;,u:&quot;https://lrmds.deped.gov.ph/detail/21760&quot;,k:&quot;osy module english&quot;}
+];
+var MCATS=[&quot;All&quot;,&quot;Reading&quot;,&quot;Listening&quot;,&quot;Vocabulary&quot;,&quot;Grammar&quot;,&quot;Writing&quot;,&quot;Worksheets&quot;,&quot;Job &amp; Work&quot;,&quot;DepEd ALS&quot;],mq=&quot;&quot;,mc=&quot;All&quot;;
+function matchMat(m){if(mc!==&quot;All&quot;&amp;&amp;m.c.indexOf(mc)&lt;0)return false;var q=mq.toLowerCase().trim();if(!q)return true;
+  var hay=(m.t+&quot; &quot;+m.s+&quot; &quot;+m.l+&quot; &quot;+m.c.join(&quot; &quot;)+&quot; &quot;+m.d+&quot; &quot;+(m.k||&quot;&quot;)+&quot; &quot;+(m.y===&quot;pdf&quot;?&quot;pdf download&quot;:m.y===&quot;vid&quot;?&quot;video&quot;:&quot;website&quot;)).toLowerCase();
+  return q.split(/\s+/).every(function(w){return hay.indexOf(w)&gt;=0;});}
+function materialsView(){
+  var list=h(&#x27;div&#x27;,{class:&#x27;rows&#x27;}),count=h(&#x27;p&#x27;,{class:&#x27;count&#x27;,&#x27;aria-live&#x27;:&#x27;polite&#x27;}),chips=h(&#x27;div&#x27;,{class:&#x27;chips&#x27;});
+  function card(m){var kind=m.y===&quot;pdf&quot;?&quot;PDF&quot;:m.y===&quot;vid&quot;?&quot;Video&quot;:&quot;Website&quot;;
+    return h(&#x27;section&#x27;,{class:&#x27;card mat&#x27;},h(&#x27;span&#x27;,{class:&#x27;kicker&#x27;},m.s+&#x27; · &#x27;+m.l+&#x27; · &#x27;+kind),h(&#x27;h2&#x27;,null,m.t),h(&#x27;p&#x27;,null,m.d),
+      h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;a&#x27;,{class:&#x27;btn&#x27;+(m.y===&quot;pdf&quot;?&#x27; gold&#x27;:&#x27;&#x27;),href:m.u,target:&#x27;_blank&#x27;,rel:&#x27;noopener noreferrer&#x27;},m.y===&quot;pdf&quot;?&#x27;Download PDF&#x27;:&#x27;Open&#x27;)));}
+  function draw(){var res=MATS.filter(matchMat);count.textContent=res.length+&#x27; of &#x27;+MATS.length+&#x27; materials&#x27;;
+    list.replaceChildren.apply(list,res.length?res.map(card):[h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},&#x27;Walang nahanap. Try: reading, listening, grammar, job, pdf.&#x27;)]);
+    chips.replaceChildren.apply(chips,MCATS.map(function(c){return h(&#x27;button&#x27;,{class:&#x27;chip&#x27;+(c===mc?&#x27; on&#x27;:&#x27;&#x27;),type:&#x27;button&#x27;,&#x27;aria-pressed&#x27;:c===mc?&#x27;true&#x27;:&#x27;false&#x27;,onclick:function(){mc=c;draw();}},c);}));}
+  var input=h(&#x27;input&#x27;,{id:&#x27;m-q&#x27;,type:&#x27;search&#x27;,placeholder:&#x27;Search: reading, grammar, job, pdf...&#x27;,autocomplete:&#x27;off&#x27;,&#x27;aria-label&#x27;:&#x27;Search materials&#x27;,value:mq,oninput:function(e){mq=e.target.value;draw();}});
+  draw();
+  return [header(&#x27;Online Materials&#x27;,&#x27;Free Materials &amp; Worksheets&#x27;,&#x27;Search, then tap Open or Download. All links are free.&#x27;),
+    h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;home&#x27;);}},&#x27;← Home&#x27;),
+    h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;games&#x27;);}},&#x27;Looking for games? Open Games →&#x27;),h(&#x27;div&#x27;,{class:&#x27;field&#x27;},h(&#x27;label&#x27;,{for:&#x27;m-q&#x27;},&#x27;Search materials&#x27;),input),chips,count,
+    h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},&#x27;You need internet. Save a PDF on your phone to use it offline. Websites can change, so the facilitator checks the links before the session.&#x27;),list];}
+
+/* ---------- Online Games (modal list + iframe player) ---------- */
+var ES=&quot;https://www.esleschool.com/&quot;;
+var GROUPS=[{k:&quot;vocab&quot;,t:&quot;Vocabulary Games&quot;,d:&quot;Spelling, word meanings, and word building.&quot;},{k:&quot;grammar&quot;,t:&quot;Grammar Games&quot;,d:&quot;Choose the right word, find the mistake, put words in order.&quot;}];
+var GAMES=[
+{g:&quot;vocab&quot;,t:&quot;Sushi Spell&quot;,s:&quot;British Council&quot;,l:&quot;All levels&quot;,d:&quot;Spell as many words as you can in two minutes.&quot;,u:BC+&quot;vocabulary/games/sushi-spell&quot;},
+{g:&quot;vocab&quot;,t:&quot;Wordshake&quot;,s:&quot;British Council&quot;,l:&quot;All levels&quot;,d:&quot;Make words from the letters. Longer words score more. Three minutes.&quot;,u:BC+&quot;vocabulary/games/wordshake&quot;},
+{g:&quot;vocab&quot;,t:&quot;Word Search&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Find hidden words in a letter grid.&quot;,u:ES+&quot;word-search/&quot;},
+{g:&quot;vocab&quot;,t:&quot;Flashcards&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Flip cards to learn and test word meanings.&quot;,u:ES+&quot;flashcards/&quot;},
+{g:&quot;vocab&quot;,t:&quot;Crossword&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Read the clue and type the word.&quot;,u:ES+&quot;crossword/&quot;},
+{g:&quot;vocab&quot;,t:&quot;Matching Pairs&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Match each word with its meaning.&quot;,u:ES+&quot;matching-pairs/&quot;},
+{g:&quot;vocab&quot;,t:&quot;Anagram&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Unscramble the letters to make the word.&quot;,u:ES+&quot;anagram/&quot;},
+{g:&quot;vocab&quot;,t:&quot;Word Detective&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Read the clue and guess the hidden word.&quot;,u:ES+&quot;word-detective/&quot;},
+{g:&quot;vocab&quot;,t:&quot;WordQuest&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Guess the hidden word in six tries.&quot;,u:ES+&quot;wordquest/&quot;},
+{g:&quot;vocab&quot;,t:&quot;BuzzWords&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Make words from seven letters. Use the centre letter.&quot;,u:ES+&quot;buzzwords/&quot;},
+{g:&quot;grammar&quot;,t:&quot;Grammar Snap&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Is the sentence correct or incorrect? Decide fast.&quot;,u:ES+&quot;grammar-snap/&quot;},
+{g:&quot;grammar&quot;,t:&quot;Gap Fill&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Choose the word that fits the gap.&quot;,u:ES+&quot;gap-fill/&quot;},
+{g:&quot;grammar&quot;,t:&quot;Spot the Mistake&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Find the mistake and choose the correction.&quot;,u:ES+&quot;spot-the-mistake/&quot;},
+{g:&quot;grammar&quot;,t:&quot;Sentence Scramble&quot;,s:&quot;ESLeSchool&quot;,l:&quot;Pre-A1 to B1&quot;,d:&quot;Tap the words into the correct order.&quot;,u:ES+&quot;sentence-scramble/&quot;}
+];
+var gmEl=null,gmKey=null;
+function gmClose(){if(gmEl){gmEl.remove();gmEl=null;}document.body.style.overflow=&#x27;&#x27;;if(gmKey){document.removeEventListener(&#x27;keydown&#x27;,gmKey);gmKey=null;}}
+function gmOpen(g,game){
+  stopAudio();
+  if(!gmEl){gmEl=h(&#x27;div&#x27;,{class:&#x27;gm-ov&#x27;,role:&#x27;dialog&#x27;,&#x27;aria-modal&#x27;:&#x27;true&#x27;,&#x27;aria-label&#x27;:&#x27;Online games&#x27;});
+    gmEl.addEventListener(&#x27;click&#x27;,function(e){if(e.target===gmEl)gmClose();});document.body.appendChild(gmEl);document.body.style.overflow=&#x27;hidden&#x27;;
+    gmKey=function(e){if(e.key===&#x27;Escape&#x27;)gmClose();};document.addEventListener(&#x27;keydown&#x27;,gmKey);}
+  var grp=GROUPS.filter(function(x){return x.k===g;})[0],box;
+  if(!game){
+    var items=GAMES.filter(function(m){return m.g===g;}).map(function(m){return h(&#x27;button&#x27;,{class:&#x27;row&#x27;,type:&#x27;button&#x27;,onclick:function(){gmOpen(g,m);}},h(&#x27;span&#x27;,{class:&#x27;n&#x27;},&#x27;▶&#x27;),h(&#x27;span&#x27;,null,h(&#x27;strong&#x27;,null,m.t),h(&#x27;small&#x27;,null,m.d)),h(&#x27;span&#x27;,{class:&#x27;meta&#x27;},h(&#x27;span&#x27;,null,m.s)));});
+    box=h(&#x27;div&#x27;,{class:&#x27;gm-box&#x27;},h(&#x27;div&#x27;,{class:&#x27;gm-top&#x27;},h(&#x27;h2&#x27;,null,grp.t),h(&#x27;button&#x27;,{class:&#x27;btn small&#x27;,type:&#x27;button&#x27;,onclick:gmClose},&#x27;Close&#x27;)),
+      h(&#x27;div&#x27;,{class:&#x27;gm-body&#x27;},h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},&#x27;Tap a game to play it here. If the screen stays blank, tap Open in new tab inside the game.&#x27;),items));
+  }else{
+    var fr=h(&#x27;iframe&#x27;,{class:&#x27;gm-frame&#x27;,src:game.u,title:game.t,allow:&#x27;fullscreen; autoplay&#x27;,sandbox:&#x27;allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-pointer-lock&#x27;});
+    box=h(&#x27;div&#x27;,{class:&#x27;gm-box&#x27;},h(&#x27;div&#x27;,{class:&#x27;gm-top&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:function(){gmOpen(g);}},&#x27;← Games&#x27;),h(&#x27;strong&#x27;,null,game.t),
+      h(&#x27;span&#x27;,{class:&#x27;gm-act&#x27;},h(&#x27;a&#x27;,{class:&#x27;btn gold small&#x27;,href:game.u,target:&#x27;_blank&#x27;,rel:&#x27;noopener noreferrer&#x27;},&#x27;Open in new tab&#x27;),h(&#x27;button&#x27;,{class:&#x27;btn small&#x27;,type:&#x27;button&#x27;,onclick:gmClose},&#x27;Close&#x27;))),
+      h(&#x27;div&#x27;,{class:&#x27;gm-body gm-play&#x27;},h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},&#x27;Blank screen or &quot;refused to connect&quot;? Tap Open in new tab.&#x27;),fr));}
+  gmEl.replaceChildren(box);}
+function gamesView(){
+  var cards=GROUPS.map(function(g){var n=GAMES.filter(function(m){return m.g===g.k;}).length;
+    return h(&#x27;section&#x27;,{class:&#x27;card&#x27;+(g.k===&#x27;grammar&#x27;?&#x27; cream&#x27;:&#x27;&#x27;)},h(&#x27;span&#x27;,{class:&#x27;kicker&#x27;},n+&#x27; games&#x27;),h(&#x27;h2&#x27;,null,g.t),h(&#x27;p&#x27;,null,g.d),
+      h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;+(g.k===&#x27;grammar&#x27;?&#x27; gold&#x27;:&#x27;&#x27;),type:&#x27;button&#x27;,onclick:function(){gmOpen(g.k);}},&#x27;Open &#x27;+g.t)));});
+  return [header(&#x27;Online Games&#x27;,&#x27;Free English Games&#x27;,&#x27;Pick a group, choose a game, and play right here.&#x27;),
+    h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;home&#x27;);}},&#x27;← Home&#x27;),
+    h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},&#x27;You need internet. If a game stays blank, tap Open in new tab. The facilitator tests the games before the session.&#x27;),h(&#x27;div&#x27;,{class:&#x27;cards&#x27;},cards)];}
+function homeView(){
+  var cards=CONTENT.sessions.map(function(ses,si){
+    return h(&#x27;section&#x27;,{class:&#x27;card&#x27;+(si%2?&#x27; cream&#x27;:&#x27;&#x27;)},
+      h(&#x27;h2&#x27;,null,ses.title),h(&#x27;p&#x27;,null,ses.blurb),
+      h(&#x27;ul&#x27;,null,ses.activities.map(function(act,ai){var p=progress[key(si,ai)];return h(&#x27;li&#x27;,null,h(&#x27;span&#x27;,null,act.title),p?stars(p.earned,p.total):h(&#x27;span&#x27;,{class:&#x27;count&#x27;},act.minutes+&#x27; min&#x27;));})),
+      h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;+(si%2?&#x27; gold&#x27;:&#x27;&#x27;),type:&#x27;button&#x27;,onclick:function(){go(&#x27;session&#x27;,si);}},&#x27;Open activities&#x27;)));});
+  cards.push(h(&#x27;section&#x27;,{class:&#x27;card cream&#x27;},h(&#x27;span&#x27;,{class:&#x27;kicker&#x27;},&#x27;Play more&#x27;),h(&#x27;h2&#x27;,null,&#x27;Online Games&#x27;),h(&#x27;p&#x27;,null,&#x27;Free vocabulary and grammar games. Play right here.&#x27;),h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn gold&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;games&#x27;);}},&#x27;Open Games&#x27;))));
+  cards.push(h(&#x27;section&#x27;,{class:&#x27;card&#x27;},h(&#x27;span&#x27;,{class:&#x27;kicker&#x27;},&#x27;After the training&#x27;),h(&#x27;h2&#x27;,null,&#x27;Free Materials &amp; Worksheets&#x27;),h(&#x27;p&#x27;,null,&#x27;Search free reading, listening, grammar and worksheet links you can use anytime.&#x27;),h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;materials&#x27;);}},&#x27;Open Materials&#x27;))));
+  return [header(&#x27;Project INSPIRE&#x27;,CONTENT.home.title,CONTENT.home.text),h(&#x27;div&#x27;,{class:&#x27;cards&#x27;},cards)];}
+function sessionView(ses){
+  var rows=ses.activities.map(function(act,ai){var p=progress[key(state.s,ai)];
+    return h(&#x27;button&#x27;,{class:&#x27;row&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;activity&#x27;,state.s,ai);}},
+      h(&#x27;span&#x27;,{class:&#x27;n&#x27;},String(ai+1)),h(&#x27;span&#x27;,null,h(&#x27;strong&#x27;,null,act.title),h(&#x27;small&#x27;,null,act.blurb)),
+      h(&#x27;span&#x27;,{class:&#x27;meta&#x27;},h(&#x27;span&#x27;,null,act.minutes+&#x27; min&#x27;),p?stars(p.earned,p.total):null));});
+  return [header(CONTENT.home.title,ses.title,ses.blurb),h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;home&#x27;);}},&#x27;← Home&#x27;),tipBox(ses.tip),h(&#x27;div&#x27;,{class:&#x27;rows&#x27;},rows)];}
+var RUNNERS={};
+function activityView(ses,act){
+  var box=h(&#x27;div&#x27;,{class:&#x27;stage&#x27;}),ctx={box:box,ses:ses,act:act};
+  ctx.finish=function(e,t){finish(ctx,e,t);};
+  var run=RUNNERS[act.type];if(run)run(ctx);else box.append(h(&#x27;p&#x27;,null,&#x27;Unknown activity type: &#x27;+act.type));
+  return [header(CONTENT.home.title,act.title),h(&#x27;button&#x27;,{class:&#x27;link&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;session&#x27;);}},&#x27;← Back to activities&#x27;),h(&#x27;p&#x27;,{class:&#x27;intro&#x27;},act.intro),tipBox(act.tip),box];}
+function finish(ctx,earned,total){
+  stopAudio();progress[key(state.s,state.a)]={earned:earned,total:total};saveProgress();
+  var ses=ctx.ses,last=state.a&gt;=ses.activities.length-1,ratio=total?earned/total:1;
+  var msg=ratio&gt;=0.8?&#x27;Great work! You got it on the first try most of the time.&#x27;:&#x27;Good try. Play again to earn more stars.&#x27;;
+  ctx.box.replaceChildren(h(&#x27;div&#x27;,{class:&#x27;done&#x27;},h(&#x27;h2&#x27;,null,&#x27;Well done!&#x27;),stars(earned,total,true),
+    h(&#x27;p&#x27;,null,&#x27;You earned &#x27;+earned+&#x27; of &#x27;+total+&#x27; stars. A star means you got it right on the first try.&#x27;),h(&#x27;p&#x27;,null,msg),
+    h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},
+      last?h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;session&#x27;);}},&#x27;Back to activities&#x27;)
+          :h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;activity&#x27;,state.s,state.a+1);}},&#x27;Next activity&#x27;),
+      h(&#x27;button&#x27;,{class:&#x27;btn ghost&#x27;,type:&#x27;button&#x27;,onclick:function(){go(&#x27;activity&#x27;,state.s,state.a);}},&#x27;Play again&#x27;))));
+  window.scrollTo(0,0);}
+
+RUNNERS.match=function(ctx){
+  var box=ctx.box,pairs=ctx.act.pairs,idx=pairs.map(function(_,i){return i;}),left=shuffle(idx),right=shuffle(idx);
+  var sel=null,flash=null,showTl=false,msg=&#x27;&#x27;,msgClass=&#x27;info&#x27;,done={},missed={},doneCount=0;
+  function draw(){
+    var lcol=h(&#x27;div&#x27;,{class:&#x27;col&#x27;},left.map(function(i){return h(&#x27;button&#x27;,{type:&#x27;button&#x27;,class:&#x27;tile term&#x27;+(done[i]?&#x27; good&#x27;:&#x27;&#x27;)+(sel===i?&#x27; sel&#x27;:&#x27;&#x27;),disabled:!!done[i],onclick:function(){sel=i;msg=&#x27;&#x27;;flash=null;draw();}},pairs[i].term);}));
+    var rcol=h(&#x27;div&#x27;,{class:&#x27;col&#x27;},right.map(function(i){return h(&#x27;button&#x27;,{type:&#x27;button&#x27;,class:&#x27;tile&#x27;+(done[i]?&#x27; good&#x27;:&#x27;&#x27;)+(flash===i?&#x27; bad&#x27;:&#x27;&#x27;),disabled:!!done[i],onclick:function(){pickMeaning(i);}},pairs[i].meaning,showTl&amp;&amp;pairs[i].tl?h(&#x27;span&#x27;,{class:&#x27;tl&#x27;},pairs[i].tl):null);}));
+    box.replaceChildren(
+      h(&#x27;div&#x27;,{class:&#x27;toolrow&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:function(){showTl=!showTl;draw();}},showTl?&#x27;Hide Filipino help&#x27;:&#x27;Tulong (Filipino)&#x27;),h(&#x27;span&#x27;,{class:&#x27;count&#x27;},doneCount+&#x27; of &#x27;+pairs.length+&#x27; matched&#x27;)),
+      h(&#x27;div&#x27;,{class:&#x27;pairs&#x27;},lcol,rcol),h(&#x27;div&#x27;,{class:&#x27;feedback &#x27;+msgClass,&#x27;aria-live&#x27;:&#x27;polite&#x27;},msg));}
+  function pickMeaning(j){
+    if(sel===null){msg=&#x27;First tap a word on the left.&#x27;;msgClass=&#x27;info&#x27;;flash=null;draw();return;}
+    if(sel===j){done[j]=true;doneCount++;msg=&#x27;Correct! &#x27;+pairs[j].term+&#x27; matches.&#x27;;msgClass=&#x27;good&#x27;;sel=null;flash=null;
+      if(doneCount===pairs.length){ctx.finish(pairs.length-Object.keys(missed).length,pairs.length);return;}}
+    else{missed[sel]=true;msg=&#x27;Not a match. Try again.&#x27;;msgClass=&#x27;bad&#x27;;flash=j;sel=null;}
+    draw();}
+  draw();};
+
+function listenPlayer(L){
+  var canSpeak=&#x27;speechSynthesis&#x27; in window,text=h(&#x27;p&#x27;,{class:&#x27;story&#x27;,hidden:true},L.text),note=h(&#x27;p&#x27;,{class:&#x27;hint&#x27;,hidden:true});
+  var showBtn=h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:function(){text.hidden=!text.hidden;showBtn.textContent=text.hidden?&#x27;Show the text&#x27;:&#x27;Hide the text&#x27;;}},&#x27;Show the text&#x27;);
+  var playId=0,auto=false;
+  function reveal(m){auto=true;text.hidden=false;showBtn.textContent=&#x27;Hide the text&#x27;;note.hidden=false;note.textContent=m;}
+  function stopAll(){playId++;stopAudio();}
+  function play(slow){
+    var my=++playId;stopAudio();
+    if(L.audioUrl){audio=new Audio(L.audioUrl);audio.playbackRate=slow?0.8:1;audio.play().catch(function(){note.hidden=false;note.textContent=&#x27;The audio could not play. Tap Show the text and read it.&#x27;;});return;}
+    if(!canSpeak)return;
+    var u=new SpeechSynthesisUtterance(L.text);u.lang=&#x27;en-US&#x27;;u.rate=slow?0.7:0.92;var msg=&#x27;No sound? Ask your facilitator to read the story, or read it yourself.&#x27;;
+    u.onstart=function(){if(my===playId&amp;&amp;auto){auto=false;text.hidden=true;showBtn.textContent=&#x27;Show the text&#x27;;note.hidden=true;}};
+    u.onerror=function(e){if(my!==playId||(e&amp;&amp;(e.error===&#x27;interrupted&#x27;||e.error===&#x27;canceled&#x27;)))return;reveal(msg);};
+    window.speechSynthesis.speak(u);
+    setTimeout(function(){if(my===playId&amp;&amp;!window.speechSynthesis.speaking)reveal(msg);},4000);}
+  if(!canSpeak&amp;&amp;!L.audioUrl){text.hidden=false;showBtn.textContent=&#x27;Hide the text&#x27;;note.hidden=false;note.textContent=&#x27;This phone cannot read aloud. Ask your facilitator to read the story, or read it yourself.&#x27;;}
+  return h(&#x27;div&#x27;,{class:&#x27;player&#x27;},h(&#x27;span&#x27;,{class:&#x27;label-s&#x27;},&#x27;Listen to the story&#x27;),
+    h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){play(false);}},&#x27;Play&#x27;),h(&#x27;button&#x27;,{class:&#x27;btn gold&#x27;,type:&#x27;button&#x27;,onclick:function(){play(true);}},&#x27;Play slowly&#x27;),h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:stopAll},&#x27;Stop&#x27;),showBtn),note,text);}
+
+RUNNERS.choice=function(ctx){
+  var act=ctx.act,qs=act.questions,qi=0,earned=0;
+  var player=act.listen?listenPlayer(act.listen):null,holder=h(&#x27;div&#x27;,{class:&#x27;stage&#x27;}),ref=null;
+  if(act.storyRef){
+    var refText=h(&#x27;p&#x27;,{class:&#x27;story&#x27;,hidden:true},act.storyRef.join(&#x27; &#x27;));
+    var refBtn=h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:function(){refText.hidden=!refText.hidden;refBtn.textContent=refText.hidden?&#x27;Show the story&#x27;:&#x27;Hide the story&#x27;;}},&#x27;Show the story&#x27;);
+    ref=h(&#x27;div&#x27;,{class:&#x27;stage&#x27;},h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},refBtn),refText);}
+  ctx.box.replaceChildren(h(&#x27;div&#x27;,{class:&#x27;stage&#x27;},player,ref,holder));
+  function showQ(){
+    var q=qs[qi],wrong=0,solved=false,opts=shuffle(q.options);
+    var fb=h(&#x27;div&#x27;,{class:&#x27;feedback&#x27;,&#x27;aria-live&#x27;:&#x27;polite&#x27;}),hintEl=h(&#x27;p&#x27;,{class:&#x27;hint&#x27;,hidden:true},q.hint||&#x27;&#x27;);
+    var next=h(&#x27;div&#x27;,{class:&#x27;btns&#x27;,hidden:true},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){if(qi&lt;qs.length-1){qi++;showQ();}else ctx.finish(earned,qs.length);}},qi&lt;qs.length-1?&#x27;Next question&#x27;:&#x27;See my stars&#x27;));
+    var btns=opts.map(function(o){
+      var b=h(&#x27;button&#x27;,{class:&#x27;opt&#x27;,type:&#x27;button&#x27;,onclick:function(){
+        if(solved)return;
+        if(o===q.answer){solved=true;if(wrong===0)earned++;b.classList.add(&#x27;good&#x27;);btns.forEach(function(x){x.disabled=true;});fb.className=&#x27;feedback good&#x27;;fb.replaceChildren(h(&#x27;strong&#x27;,null,&#x27;Correct! &#x27;),q.why||&#x27;&#x27;);next.hidden=false;}
+        else{wrong++;b.classList.add(&#x27;bad&#x27;);b.disabled=true;fb.className=&#x27;feedback bad&#x27;;fb.textContent=&#x27;Not yet. Try another answer.&#x27;;}}},o);
+      return b;});
+    holder.replaceChildren(
+      h(&#x27;div&#x27;,{class:&#x27;toolrow&#x27;},h(&#x27;span&#x27;,{class:&#x27;count&#x27;},&#x27;Question &#x27;+(qi+1)+&#x27; of &#x27;+qs.length),q.hint?h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:function(){hintEl.hidden=!hintEl.hidden;}},&#x27;Tulong (Filipino)&#x27;):null),
+      h(&#x27;p&#x27;,{class:&#x27;prompt&#x27;},q.prompt),hintEl,h(&#x27;div&#x27;,{class:&#x27;opts&#x27;},btns),fb,next);}
+  showQ();};
+
+RUNNERS.order=function(ctx){
+  var rounds=ctx.act.rounds,ri=0,earned=0,box=ctx.box;
+  var total=rounds.reduce(function(n,r){return n+r.steps.length;},0);
+  function showRound(){
+    var r=rounds[ri],chosen=[],misses={},missCount=0,msg=&#x27;&#x27;,msgClass=&#x27;info&#x27;,pool=shuffle(r.steps),complete=false,hintOpen=false;
+    function draw(){
+      var list=h(&#x27;ol&#x27;,{class:&#x27;seq&#x27;},r.steps.map(function(_,i){return h(&#x27;li&#x27;,{class:i&lt;chosen.length?&#x27;filled&#x27;:&#x27;&#x27;},i&lt;chosen.length?chosen[i]:&#x27;Tap the next step&#x27;);}));
+      var left=pool.filter(function(s){return chosen.indexOf(s)&lt;0;});
+      put(box,
+        h(&#x27;div&#x27;,{class:&#x27;toolrow&#x27;},h(&#x27;span&#x27;,{class:&#x27;count&#x27;},&#x27;Round &#x27;+(ri+1)+&#x27; of &#x27;+rounds.length),r.hint?h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:function(){hintOpen=!hintOpen;draw();}},&#x27;Tulong (Filipino)&#x27;):null),
+        h(&#x27;h3&#x27;,null,r.title),hintOpen?h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},r.hint):null,list,
+        left.length?h(&#x27;div&#x27;,{class:&#x27;pool&#x27;},left.map(function(s){return h(&#x27;button&#x27;,{class:&#x27;opt&#x27;,type:&#x27;button&#x27;,onclick:function(){pick(s);}},s);})):null,
+        h(&#x27;div&#x27;,{class:&#x27;feedback &#x27;+msgClass,&#x27;aria-live&#x27;:&#x27;polite&#x27;},msg),
+        complete?h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){if(ri&lt;rounds.length-1){ri++;showRound();}else ctx.finish(earned,total);}},ri&lt;rounds.length-1?&#x27;Next round&#x27;:&#x27;See my stars&#x27;)):null);}
+    function pick(s){
+      if(s===r.steps[chosen.length]){chosen.push(s);msg=&#x27;&#x27;;msgClass=&#x27;info&#x27;;
+        if(chosen.length===r.steps.length){earned+=r.steps.length-missCount;complete=true;msg=&#x27;Correct! That is the right order.&#x27;;msgClass=&#x27;good&#x27;;}}
+      else{if(!misses[chosen.length]){misses[chosen.length]=true;missCount++;}msg=&#x27;Not that one. What comes next?&#x27;;msgClass=&#x27;bad&#x27;;}
+      draw();}
+    draw();}
+  showRound();};
+
+RUNNERS.find=function(ctx){
+  var act=ctx.act,rounds=act.rounds,ri=0,earned=0,box=ctx.box;
+  function showRound(){
+    var r=rounds[ri],wrong={},wrongCount=0,solved=false,hintOpen=false,msg=&#x27;&#x27;,msgClass=&#x27;info&#x27;;
+    function draw(){
+      put(box,
+        h(&#x27;div&#x27;,{class:&#x27;toolrow&#x27;},h(&#x27;span&#x27;,{class:&#x27;count&#x27;},&#x27;Question &#x27;+(ri+1)+&#x27; of &#x27;+rounds.length),r.hint?h(&#x27;button&#x27;,{class:&#x27;btn ghost small&#x27;,type:&#x27;button&#x27;,onclick:function(){hintOpen=!hintOpen;draw();}},&#x27;Tulong (Filipino)&#x27;):null),
+        h(&#x27;p&#x27;,{class:&#x27;prompt&#x27;},r.prompt),hintOpen?h(&#x27;p&#x27;,{class:&#x27;hint&#x27;},r.hint):null,
+        h(&#x27;div&#x27;,{class:&#x27;opts&#x27;},act.passage.map(function(sent){var cls=&#x27;opt&#x27;+(solved&amp;&amp;sent===r.answer?&#x27; good&#x27;:&#x27;&#x27;)+(wrong[sent]?&#x27; bad&#x27;:&#x27;&#x27;);return h(&#x27;button&#x27;,{class:cls,type:&#x27;button&#x27;,disabled:solved||!!wrong[sent],onclick:function(){pick(sent);}},sent);})),
+        h(&#x27;div&#x27;,{class:&#x27;feedback &#x27;+msgClass,&#x27;aria-live&#x27;:&#x27;polite&#x27;},msg),
+        solved?h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){if(ri&lt;rounds.length-1){ri++;showRound();}else ctx.finish(earned,rounds.length);}},ri&lt;rounds.length-1?&#x27;Next question&#x27;:&#x27;See my stars&#x27;)):null);}
+    function pick(sent){
+      if(sent===r.answer){solved=true;if(wrongCount===0)earned++;msg=&#x27;Correct! This sentence is the proof.&#x27;;msgClass=&#x27;good&#x27;;}
+      else{wrong[sent]=true;wrongCount++;msg=&#x27;Not this one. Read again and try another sentence.&#x27;;msgClass=&#x27;bad&#x27;;}
+      draw();}
+    draw();}
+  showRound();};
+
+RUNNERS.write=function(ctx){
+  var act=ctx.act,box=ctx.box,minWords=act.minWords||8;
+  var name=h(&#x27;input&#x27;,{id:&#x27;w-name&#x27;,type:&#x27;text&#x27;,placeholder:&#x27;Your first name&#x27;,autocomplete:&#x27;off&#x27;,maxlength:&#x27;30&#x27;});
+  var ta=h(&#x27;textarea&#x27;,{id:&#x27;w-text&#x27;,placeholder:&#x27;Type your sentences here.&#x27;});
+  var checks=[
+    {label:&#x27;Starts with a capital letter&#x27;,test:function(t){return /^[A-Z]/.test(t);}},
+    {label:&#x27;Ends with a period, ! or ?&#x27;,test:function(t){return /[.!?][&quot;”&#x27;)]?$/.test(t);}},
+    {label:&#x27;Has at least &#x27;+minWords+&#x27; words&#x27;,test:function(t,w){return w&gt;=minWords;}},
+    {label:&#x27;Uses a word from the word bank&#x27;,test:function(t){return (act.wordBank||[]).some(function(w){return new RegExp(&#x27;\\b&#x27;+w.replace(/[^a-z]/gi,&#x27;&#x27;)+&#x27;\\b&#x27;,&#x27;i&#x27;).test(t);});}}];
+  var items=checks.map(function(c){return h(&#x27;li&#x27;,null,c.label);}),status=h(&#x27;div&#x27;,{class:&#x27;feedback info&#x27;,&#x27;aria-live&#x27;:&#x27;polite&#x27;});
+  function result(){var t=ta.value.trim(),w=t?t.split(/\s+/).length:0,passed=0;
+    checks.forEach(function(c,i){var ok=t&amp;&amp;c.test(t,w);items[i].className=ok?&#x27;ok&#x27;:&#x27;&#x27;;if(ok)passed++;});return {t:t,w:w,passed:passed};}
+  function insert(txt){
+    var s=ta.selectionStart,e=ta.selectionEnd;if(typeof s!==&#x27;number&#x27;){s=e=ta.value.length;}
+    var before=ta.value.slice(0,s),after=ta.value.slice(e),pad=before&amp;&amp;!/\s$/.test(before)?&#x27; &#x27;:&#x27;&#x27;;
+    ta.value=before+pad+txt+&#x27; &#x27;+after;var pos=(before+pad+txt+&#x27; &#x27;).length;ta.focus();ta.setSelectionRange(pos,pos);result();}
+  ta.addEventListener(&#x27;input&#x27;,result);
+  function showCard(){
+    var r=result();
+    if(r.w&lt;3){status.className=&#x27;feedback bad&#x27;;status.textContent=&#x27;Write a little more first. Try two or three sentences.&#x27;;return;}
+    var who=name.value.trim(),note=h(&#x27;div&#x27;,{class:&#x27;feedback info&#x27;,&#x27;aria-live&#x27;:&#x27;polite&#x27;});
+    var out=h(&#x27;div&#x27;,{class:&#x27;out&#x27;},h(&#x27;span&#x27;,{class:&#x27;tag&#x27;},CONTENT.brand),h(&#x27;div&#x27;,{class:&#x27;who&#x27;},who?who+&#x27;’s next step&#x27;:&#x27;My next step&#x27;),h(&#x27;hr&#x27;),h(&#x27;p&#x27;,null,r.t));
+    var plain=(who?who+&#x27;: &#x27;:&#x27;&#x27;)+r.t;
+    box.replaceChildren(out,h(&#x27;p&#x27;,{class:&#x27;count&#x27;},r.passed+&#x27; of &#x27;+checks.length+&#x27; checks complete.&#x27;),note,
+      h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},
+        h(&#x27;button&#x27;,{class:&#x27;btn gold&#x27;,type:&#x27;button&#x27;,onclick:function(){
+          function fallback(){note.textContent=&#x27;Could not copy. Press and hold the card text to copy it.&#x27;;}
+          if(navigator.clipboard&amp;&amp;navigator.clipboard.writeText){navigator.clipboard.writeText(plain).then(function(){note.textContent=&#x27;Copied. Paste it where your facilitator asks.&#x27;;},fallback);}else fallback();}},&#x27;Copy my card&#x27;),
+        h(&#x27;button&#x27;,{class:&#x27;btn ghost&#x27;,type:&#x27;button&#x27;,onclick:function(){box.replaceChildren.apply(box,form());result();}},&#x27;Edit again&#x27;),
+        h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:function(){ctx.finish(r.passed,checks.length);}},&#x27;Finish&#x27;)));}
+  function form(){
+    return [
+      h(&#x27;div&#x27;,{class:&#x27;field&#x27;},h(&#x27;label&#x27;,{for:&#x27;w-name&#x27;},&#x27;Your name (optional)&#x27;),name),
+      h(&#x27;p&#x27;,{class:&#x27;prompt&#x27;},act.prompt),
+      h(&#x27;div&#x27;,null,h(&#x27;span&#x27;,{class:&#x27;label-s&#x27;},&#x27;Start your sentence&#x27;),h(&#x27;div&#x27;,{class:&#x27;chips&#x27;},(act.starters||[]).map(function(s){return h(&#x27;button&#x27;,{class:&#x27;chip&#x27;,type:&#x27;button&#x27;,onclick:function(){insert(s);}},s+&#x27; …&#x27;);}))),
+      h(&#x27;div&#x27;,null,h(&#x27;span&#x27;,{class:&#x27;label-s&#x27;},&#x27;Word bank (tap to add)&#x27;),h(&#x27;div&#x27;,{class:&#x27;chips&#x27;},(act.wordBank||[]).map(function(w){return h(&#x27;button&#x27;,{class:&#x27;chip word&#x27;,type:&#x27;button&#x27;,onclick:function(){insert(w);}},w);}))),
+      h(&#x27;div&#x27;,{class:&#x27;field&#x27;},h(&#x27;label&#x27;,{for:&#x27;w-text&#x27;},&#x27;My response&#x27;),ta),
+      h(&#x27;ul&#x27;,{class:&#x27;checks&#x27;},items),status,
+      h(&#x27;div&#x27;,{class:&#x27;btns&#x27;},h(&#x27;button&#x27;,{class:&#x27;btn&#x27;,type:&#x27;button&#x27;,onclick:showCard},&#x27;Make my card&#x27;))];}
+  box.replaceChildren.apply(box,form());result();};
+
+render();
+})();
+&lt;/script&gt;
+&lt;script&gt;
+(function(){
+&#x27;use strict&#x27;;
+var app=document.getElementById(&#x27;app&#x27;); if(!app) return;
+var on=true; try{on=localStorage.getItem(&#x27;inspireSound&#x27;)!==&#x27;off&#x27;}catch(e){}
+var calm=matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;).matches;
+var ac=null, combo=0, px=innerWidth/2, py=innerHeight/2, snap=null, tEl=null;
+
+/* ---------- CSS ---------- */
+var css=&#x27;\
+@keyframes fxrise{from{opacity:0;transform:translateY(26px) scale(.93)}60%{transform:translateY(-5px) scale(1.02)}to{opacity:1;transform:none}}\
+@keyframes fxpop{0%{transform:scale(1)}40%{transform:scale(1.09)}70%{transform:scale(.97)}100%{transform:scale(1)}}\
+@keyframes fxstar{0%{transform:scale(0) rotate(-140deg);opacity:0}70%{transform:scale(1.55) rotate(14deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}\
+@keyframes fxbob{50%{transform:translateY(-6px)}}\
+@keyframes fxgrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}\
+@keyframes fxtoast{0%{transform:translate(-50%,40px) scale(.6);opacity:0}15%{transform:translate(-50%,0) scale(1.14);opacity:1}25%{transform:translate(-50%,0) scale(1)}80%{transform:translate(-50%,0);opacity:1}100%{transform:translate(-50%,-12px);opacity:0}}\
+#fx-toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,40px);opacity:0;background:var(--gold);color:var(--on-gold);font:800 1.2rem var(--font-display);padding:.7rem 1.3rem;border-radius:999px;box-shadow:0 12px 26px -8px var(--shadow);z-index:100;pointer-events:none;white-space:nowrap}\
+#fx-toast.show{animation:fxtoast 1.5s both}\
+.done .star{animation:fxstar .6s cubic-bezier(.34,1.56,.64,1) both}\
+@media (prefers-reduced-motion:no-preference){\
+.shell&gt;*{animation:fxrise .55s both}\
+.shell&gt;*:nth-child(2){animation-delay:.05s}.shell&gt;*:nth-child(3){animation-delay:.1s}.shell&gt;*:nth-child(4){animation-delay:.15s}.shell&gt;*:nth-child(5){animation-delay:.2s}.shell&gt;*:nth-child(6){animation-delay:.25s}\
+.cards&gt;*,.rows&gt;*{animation:fxrise .6s both}\
+.cards&gt;*:nth-child(2),.rows&gt;*:nth-child(2){animation-delay:.1s}.rows&gt;*:nth-child(3){animation-delay:.18s}.rows&gt;*:nth-child(4){animation-delay:.26s}.rows&gt;*:nth-child(5){animation-delay:.34s}\
+.pill{animation:fxbob 2.6s ease-in-out infinite}\
+.rule{transform-origin:left;animation:fxgrow .7s .2s both}\
+.done h2{animation:fxbob 1.5s ease-in-out infinite}\
+.btn,.opt,.tile,.chip,.row,.toggle{transition:transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s}\
+.btn:active,.opt:active:not(:disabled),.tile:active:not(:disabled),.chip:active,.row:active,.toggle:active{transform:scale(.93)}\
+.opt.good,.feedback.good,.tile.sel{animation:fxpop .45s}\
+.feedback.bad{animation:fxpop .35s}\
+.total .star{animation:fxbob 1.8s ease-in-out infinite}\
+}\
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.btn:hover,.row:hover,.opt:hover:not(:disabled),.tile:hover:not(:disabled){transform:translateY(-3px)}}&#x27;;
+var st=document.createElement(&#x27;style&#x27;); st.textContent=css; document.head.appendChild(st);
+
+/* ---------- sound ---------- */
+function unlock(){
+  if(!ac){ try{ ac=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(ac &amp;&amp; ac.state===&#x27;suspended&#x27;) ac.resume();
+  return ac;
+}
+function tone(f,t,d,type,v,f2){
+  if(!on) return; var a=unlock(); if(!a) return;
+  var o=a.createOscillator(), g=a.createGain(), s=a.currentTime+t;
+  o.type=type||&#x27;sine&#x27;; o.frequency.setValueAtTime(f,s);
+  if(f2) o.frequency.exponentialRampToValueAtTime(f2,s+d);
+  g.gain.setValueAtTime(.0001,s); g.gain.exponentialRampToValueAtTime(v||.15,s+.01); g.gain.exponentialRampToValueAtTime(.0001,s+d);
+  o.connect(g); g.connect(a.destination); o.start(s); o.stop(s+d+.03);
+}
+function vib(p){ try{ if(on &amp;&amp; navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+/* ---------- toast + confetti ---------- */
+function say(txt){
+  if(!tEl){ tEl=document.createElement(&#x27;div&#x27;); tEl.id=&#x27;fx-toast&#x27;; tEl.setAttribute(&#x27;aria-hidden&#x27;,&#x27;true&#x27;); document.body.appendChild(tEl); }
+  tEl.textContent=txt; tEl.className=&#x27;&#x27;; void tEl.offsetWidth; tEl.className=&#x27;show&#x27;;
+}
+function burst(x,y,n,rain){
+  if(calm) return;
+  var cols=[&#x27;#F3B62B&#x27;,&#x27;#3F65DB&#x27;,&#x27;#FF5C8A&#x27;,&#x27;#2ED47A&#x27;,&#x27;#FFFFFF&#x27;,&#x27;#FF8A3D&#x27;];
+  for(var i=0;i&lt;n;i++){
+    var p=document.createElement(&#x27;i&#x27;), sz=6+Math.random()*7;
+    p.style.cssText=&#x27;position:fixed;left:&#x27;+(rain?Math.random()*innerWidth:x)+&#x27;px;top:&#x27;+(rain?-14:y)+&#x27;px;width:&#x27;+sz+&#x27;px;height:&#x27;+(sz*(Math.random()&lt;.5?1:.5))+&#x27;px;background:&#x27;+cols[i%cols.length]+&#x27;;border-radius:&#x27;+(Math.random()&lt;.4?&#x27;50%&#x27;:&#x27;2px&#x27;)+&#x27;;pointer-events:none;z-index:99&#x27;;
+    document.body.appendChild(p);
+    var dx=(Math.random()-.5)*(rain?160:260), dy=rain?innerHeight+40:-(60+Math.random()*140), rot=Math.random()*900;
+    var frames=rain
+      ? [{transform:&#x27;translate(0,0) rotate(0deg)&#x27;},{transform:&#x27;translate(&#x27;+dx+&#x27;px,&#x27;+dy+&#x27;px) rotate(&#x27;+rot+&#x27;deg)&#x27;}]
+      : [{transform:&#x27;translate(0,0) scale(1)&#x27;,opacity:1},{transform:&#x27;translate(&#x27;+(dx/2)+&#x27;px,&#x27;+dy+&#x27;px) rotate(200deg)&#x27;,opacity:1,offset:.45},{transform:&#x27;translate(&#x27;+dx+&#x27;px,&#x27;+(dy+260)+&#x27;px) rotate(500deg)&#x27;,opacity:0}];
+    var an=p.animate(frames,{duration:rain?1800+Math.random()*1400:900+Math.random()*500,delay:rain?Math.random()*700:0,easing:rain?&#x27;ease-in&#x27;:&#x27;cubic-bezier(.2,.7,.4,1)&#x27;,fill:&#x27;forwards&#x27;});
+    an.onfinish=(function(el){ return function(){ el.remove(); }; })(p);
+  }
+}
+
+/* ---------- reactions ---------- */
+function good(){
+  combo++;
+  var f=523*Math.pow(1.0595,Math.min(combo,8)*2);
+  tone(f,0,.12,&#x27;triangle&#x27;,.18); tone(f*1.5,.09,.22,&#x27;triangle&#x27;,.18);
+  burst(px,py,combo&gt;=3?28:14); vib(25);
+  say(combo&gt;=3 ? combo+&#x27; sunod-sunod! 🔥&#x27; : pick([&#x27;Galing! 🎉&#x27;,&#x27;Tama! 💪&#x27;,&#x27;Ayos! ⭐&#x27;,&#x27;Sulit! 👏&#x27;,&#x27;Boom! 💥&#x27;]));
+}
+function bad(){
+  combo=0;
+  tone(230,0,.3,&#x27;sawtooth&#x27;,.09,110); vib([40,40,40]);
+  say(pick([&#x27;Konti na lang! 💪&#x27;,&#x27;Subukan ulit! 😄&#x27;,&#x27;Kaya mo yan! 🙌&#x27;]));
+}
+function win(){
+  var all=document.querySelectorAll(&#x27;.done .star&#x27;), got=document.querySelectorAll(&#x27;.done .star.on&#x27;).length;
+  all.forEach(function(s,i){ s.style.animationDelay=(i*.14)+&#x27;s&#x27;; });
+  [523,659,784,1047].forEach(function(f,i){ tone(f,i*.11,.25,&#x27;triangle&#x27;,.18); });
+  for(var i=0;i&lt;got;i++) tone(880+i*110,.5+i*.14,.2,&#x27;sine&#x27;,.14);
+  if(all.length &amp;&amp; got===all.length) tone(1568,.6+got*.14,.5,&#x27;triangle&#x27;,.16);
+  burst(0,0,got?70:20,true); vib([60,40,100]);
+  say(all.length &amp;&amp; got===all.length ? &#x27;PERFECT! 🏆&#x27; : got ? &#x27;Galing mo! 🎉&#x27; : &#x27;Ulit pa tayo! 💪&#x27;);
+}
+
+/* ---------- detect right / wrong without touching the game code ---------- */
+function marks(){
+  return { s:document.querySelectorAll(&#x27;.opt.good,.tile.good,.seq li.filled&#x27;).length,
+           b:document.querySelectorAll(&#x27;.opt.bad,.tile.bad&#x27;).length };
+}
+document.addEventListener(&#x27;pointerdown&#x27;,function(e){
+  px=e.clientX; py=e.clientY;
+  var b=e.target.closest &amp;&amp; e.target.closest(&#x27;button&#x27;);
+  if(b &amp;&amp; !b.disabled){ unlock(); tone(440,0,.05,&#x27;sine&#x27;,.07,660); }
+},true);
+document.addEventListener(&#x27;click&#x27;,function(e){
+  var b=e.target.closest &amp;&amp; e.target.closest(&#x27;button&#x27;);
+  snap = (b &amp;&amp; b.closest(&#x27;#app&#x27;) &amp;&amp; b.matches(&#x27;.opt,.tile&#x27;)) ? { m:marks(), pool:!!b.closest(&#x27;.pool&#x27;) } : null;
+},true);
+document.addEventListener(&#x27;click&#x27;,function(){
+  if(!snap) return;
+  var a=marks(), s=snap; snap=null;
+  if(a.s&gt;s.m.s) good();
+  else if(a.b&gt;s.m.b) bad();
+  else if(s.pool){ var f=document.querySelector(&#x27;.feedback.bad&#x27;); if(f &amp;&amp; f.textContent) bad(); }
+});
+
+/* ---------- sound button + finish celebration ---------- */
+function sndBtn(){
+  var b=document.createElement(&#x27;button&#x27;); b.type=&#x27;button&#x27;; b.className=&#x27;toggle fxsnd&#x27;;
+  function up(){ b.textContent=on?&#x27;🔊 Sound&#x27;:&#x27;🔇 Sound&#x27;; b.setAttribute(&#x27;aria-pressed&#x27;,on?&#x27;true&#x27;:&#x27;false&#x27;); }
+  b.addEventListener(&#x27;click&#x27;,function(){
+    on=!on; try{ localStorage.setItem(&#x27;inspireSound&#x27;,on?&#x27;on&#x27;:&#x27;off&#x27;); }catch(e){}
+    up(); if(on){ tone(660,0,.1,&#x27;triangle&#x27;,.15); tone(990,.08,.18,&#x27;triangle&#x27;,.15); }
+  });
+  up(); return b;
+}
+function ensureBtn(){
+  document.querySelectorAll(&#x27;.tools&#x27;).forEach(function(t){ if(!t.querySelector(&#x27;.fxsnd&#x27;)) t.prepend(sndBtn()); });
+}
+new MutationObserver(function(ms){
+  ensureBtn();
+  for(var i=0;i&lt;ms.length;i++){
+    var n=ms[i].addedNodes;
+    for(var j=0;j&lt;n.length;j++){
+      var x=n[j];
+      if(x.nodeType===1 &amp;&amp; (x.classList.contains(&#x27;done&#x27;) || x.querySelector(&#x27;.done&#x27;))){ win(); return; }
+    }
+  }
+}).observe(app,{childList:true,subtree:true});
+ensureBtn();
+})();
+&lt;/script&gt;
+&lt;/html&gt;
+"></iframe>
   </section>
 </div>
 
 <nav class="nav" aria-label="Hub sections"><div class="nav-in">
   <a class="tab" href="#home" data-tab="home">Home</a>
-  <a class="tab" href="#tour" data-tab="tour">Session 1<small>Learn the hub</small></a>
-  <a class="tab" href="#lab" data-tab="lab">Session 2<small>Read, Listen</small></a>
+  <a class="tab" href="#lab" data-tab="lab">Lab<small>Read, Listen</small></a>
+  <a class="tab" href="#wordlab" data-tab="wordlab">Word lab<small>Games</small></a>
   <a class="tab" href="#library" data-tab="library">Library</a>
+  <a class="tab" href="#play" data-tab="play">Play<small>Games, Files</small></a>
 </div></nav>
 
 <script>
@@ -340,8 +1036,8 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
 
   /* ---------- passport ---------- */
   var stamps=store.get('stamps',{});
-  var STAMPS=[['tour','Know the hub'],['words','Words'],['read','Read'],['listen','Listen'],['check','Check'],['respond','Respond']];
-  function isDone(k){return k==='tour'?!!(stamps.tour_a&&stamps.tour_b&&stamps.tour_c):!!stamps[k]}
+  var STAMPS=[['words','Words'],['wordlab','Word lab'],['read','Read'],['listen','Listen'],['check','Check'],['respond','Respond']];
+  function isDone(k){return !!stamps[k]}
   function renderStamps(){
     $$('.passport').forEach(function(el){
       el.innerHTML=STAMPS.map(function(s){var on=isDone(s[0]);
@@ -354,7 +1050,7 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
   function stamp(k){if(!stamps[k]){stamps[k]=true;store.set('stamps',stamps)}renderStamps()}
 
   /* ---------- routing ---------- */
-  var VIEWS=['home','tour','lab','library'];
+  var VIEWS=['home','lab','wordlab','library','play'];
   function route(){
     var h=(location.hash||'#home').slice(1);if(VIEWS.indexOf(h)<0)h='home';
     VIEWS.forEach(function(v){$('#'+v).classList.toggle('on',v===h)});
@@ -400,54 +1096,6 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
     }
     render();
   }
-
-  /* ---------- Session 1 ---------- */
-  mcq($('#a-btn'),[
-    {ctx:'<span class="mockbtn">Search</span>',q:'What does this button do?',opts:['Closes the page','Lets you look for materials by typing words','Sends a message'],correct:1,why:'Search: hanapin ang gusto mong materials.'},
-    {ctx:'<span class="mockbtn out">Log in</span>',q:'What does this button do?',opts:['Opens your account with your username and password','Deletes a file','Plays a video'],correct:0,why:'Log in: pumasok sa account mo.'},
-    {ctx:'<span class="mockbtn">Create an account</span>',q:'What does this button do?',opts:['Takes you back one page','Lets you make a new account','Saves a file to your phone'],correct:1,why:'Create an account: gumawa ng bagong account.'},
-    {ctx:'<span class="mockbtn">Download</span>',q:'What does this button do?',opts:['Saves a file to your phone','Sends your answer','Logs you out'],correct:0,why:'Download: i-save ang file sa phone mo.'},
-    {ctx:'<span class="mockbtn">Submit</span>',q:'What does this button do?',opts:['Starts a new lesson','Sends your answer or form','Makes the text bigger'],correct:1,why:'Submit: ipadala ang sagot o form.'},
-    {ctx:'<span class="mockbtn out">Back</span>',q:'What does this button do?',opts:['Goes to the page you were on before','Goes to the next lesson','Closes the internet'],correct:0,why:'Back: bumalik sa naunang page.'}
-  ],{label:'Read the button',onDone:function(){stamp('tour_a')}});
-
-  mcq($('#a-search'),[
-    {ctx:'<p class="scenario">You want to find <b>free skills courses</b> from TESDA.</p>',q:'Which search words are best?',opts:['free TESDA online courses','please help me find courses','TESDA'],correct:0,why:'Use 2 to 4 key words: what you want plus where it is from.',hint:'Too short or too long does not help. Try words that name exactly what you want.'},
-    {ctx:'<p class="scenario">You want to <b>practice listening</b> in easy English.</p>',q:'Which search words are best?',opts:['english','beginner English listening','I want to listen to English'],correct:1,why:'"Beginner" and "listening" tell the site your level and your skill.',hint:'Add your level and the skill you want to practice.'},
-    {ctx:'<p class="scenario">You want to know if you can <b>study again</b> through ALS.</p>',q:'Which search words are best?',opts:['school','can I study','ALS enrollment out-of-school youth'],correct:2,why:'These words name the program and the kind of learner.',hint:'Use the exact name of the program.'}
-  ],{label:'Pick the search words',onDone:function(){stamp('tour_b')}});
-
-  (function(){
-    var root=$('#a-steps');
-    var steps=['Go to e-tesda.gov.ph.','Click "Login" at the top of the page.','Fill in all the required fields.','Click "Create an Account".','Open the email you received and activate your account.'];
-    var shuffled=[2,0,4,1,3],chosen=[];
-    function render(){
-      var pool=shuffled.filter(function(x){return chosen.indexOf(x)<0});
-      var slots='';
-      for(var p=0;p<steps.length;p++){
-        var has=p<chosen.length;
-        slots+='<div class="slot'+(has?'':' empty')+'"><span class="n">'+(p+1)+'</span><button class="step" '+(has?'data-rm="'+p+'"':'disabled')+'>'+(has?steps[chosen[p]]:'Tap a step below')+'</button></div>';
-      }
-      root.innerHTML='<div class="stack"><div class="stack" style="gap:8px" id="slots">'+slots+'</div>'+
-        '<div><p class="hint" style="margin-bottom:8px">Steps to choose from</p><ul class="steps">'+
-        pool.map(function(x){return '<li><button class="step" data-add="'+x+'">'+steps[x]+'</button></li>'}).join('')+'</ul></div>'+
-        '<div class="actions"><button class="btn" id="chk"'+(chosen.length<steps.length?' disabled':'')+'>Check my order</button><button class="btn ghost" id="rst">Start over</button></div>'+
-        '<div class="fb" id="ofb" aria-live="polite"></div>'+
-        '<p class="sub">Steps checked on the e-TESDA guide. The website may change, so always read the directions on the screen.</p></div>';
-      $$('[data-add]',root).forEach(function(b){b.addEventListener('click',function(){chosen.push(+b.dataset.add);render()})});
-      $$('[data-rm]',root).forEach(function(b){b.addEventListener('click',function(){chosen.splice(+b.dataset.rm,1);render()})});
-      $('#rst',root).addEventListener('click',function(){chosen=[];render()});
-      $('#chk',root).addEventListener('click',check);
-    }
-    function check(){
-      var ok=0;
-      $$('#slots .slot',root).forEach(function(s,p){var b=$('.step',s);var right=chosen[p]===p;if(right)ok++;b.classList.add(right?'ok':'try')});
-      var fb=$('#ofb',root);
-      if(ok===steps.length){fb.className='fb good';fb.textContent='Tama! You can now follow online directions step by step.';stamp('tour_c')}
-      else{fb.className='fb try';fb.textContent=ok+' of '+steps.length+' steps are in the right place. Tap a yellow step to remove it and try again.'}
-    }
-    render();
-  })();
 
   /* ---------- Session 2: lab navigation ---------- */
   var LABS=[['Words','words'],['Read and listen','read'],['Check','check'],['Respond','respond']];
@@ -626,10 +1274,122 @@ textarea{font:inherit;width:100%;min-height:92px;padding:12px 14px;border-radius
     $('#copymsg').textContent='';$('#copyfallback').hidden=true;
   });
 
+  /* ---------- word lab ---------- */
+  var W=[
+    ['opportunity','a chance to do something','pagkakataon'],
+    ['options','choices you can pick from','mga pagpipilian'],
+    ['requirements','things you must have or do to join','mga kailangan'],
+    ['schedule','the days and times of an activity','iskedyul'],
+    ['embarrassed','shy or ashamed','nahihiya'],
+    ['endure','keep going through hard times','magtiis'],
+    ['apply','ask to join or to get a job','mag-apply'],
+    ['register','put your name on a list to join','magparehistro'],
+    ['confidence','believing that you can do it','tiwala sa sarili'],
+    ['skills','things you can do well','mga kasanayan'],
+    ['certificate','a paper that shows you finished','sertipiko'],
+    ['enroll','join a school or a program','mag-enroll']
+  ];
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+
+  /* match */
+  (function(){
+    var root=$('#g-match');
+    function round(){
+      var set=shuffle(W).slice(0,6),words=shuffle(set),means=shuffle(set),selW=null,done=0;
+      root.innerHTML='<div class="cols"><div class="stack" style="gap:8px" id="cw"></div><div class="stack" style="gap:8px" id="cm"></div></div><div class="fb" id="mfb" aria-live="polite"></div><div class="actions" id="mact"></div>';
+      words.forEach(function(w){var b=document.createElement('button');b.className='opt';b.textContent=w[0];b._w=w;$('#cw',root).appendChild(b)});
+      means.forEach(function(w){var b=document.createElement('button');b.className='opt';b.textContent=w[1];b._w=w;$('#cm',root).appendChild(b)});
+      var fb=$('#mfb',root);
+      $$('#cw .opt',root).forEach(function(b){b.addEventListener('click',function(){
+        $$('#cw .opt',root).forEach(function(x){x.classList.remove('sel')});
+        selW=b;b.classList.add('sel');fb.className='fb';fb.textContent='Now tap the meaning.';
+      })});
+      $$('#cm .opt',root).forEach(function(m){m.addEventListener('click',function(){
+        if(!selW){fb.className='fb try';fb.textContent='Tap a word first.';return}
+        if(selW._w===m._w){
+          selW.classList.remove('sel');selW.classList.add('good');selW.disabled=true;
+          m.classList.add('good');m.disabled=true;
+          m.innerHTML=m._w[1]+'<span class="fil">'+m._w[2]+'</span>';
+          selW=null;done++;fb.className='fb good';fb.textContent='Tama!';
+          if(done===6){fb.textContent='All matched. Great job!';stamp('wordlab');$('#mact',root).innerHTML='<button class="btn" id="mnew">New round</button>';$('#mnew',root).addEventListener('click',round)}
+        }else{
+          m.classList.add('try');setTimeout(function(){m.classList.remove('try')},700);
+          fb.className='fb try';fb.textContent='Close! Try another meaning.';
+        }
+      })});
+    }
+    round();
+  })();
+
+  /* unscramble */
+  (function(){
+    var root=$('#g-scr'),list,idx,word,tiles,ans;
+    function start(){list=shuffle(W).slice(0,6);idx=0;load()}
+    function scr(w){var l=w.split(''),r;var n=0;do{r=shuffle(l);n++}while(r.join('')===w&&n<10);return r}
+    function load(){
+      var it=list[idx];word=it[0];tiles=scr(word);ans=[];draw(it);
+    }
+    function draw(it){
+      var boxes='';for(var i=0;i<word.length;i++)boxes+='<span class="box">'+(ans[i]!=null?tiles[ans[i]]:'')+'</span>';
+      root.innerHTML='<span class="count">'+(idx+1)+' / '+list.length+'</span>'+
+        '<p class="q">Meaning: '+it[1]+' <span class="hint">('+it[2]+')</span></p>'+
+        '<div class="boxes" aria-label="Your answer">'+boxes+'</div>'+
+        '<div class="tiles" style="margin-top:14px">'+tiles.map(function(c,i){return '<button class="tile" data-i="'+i+'"'+(ans.indexOf(i)>=0?' disabled':'')+'>'+c+'</button>'}).join('')+'</div>'+
+        '<div class="fb" id="sfb" aria-live="polite"></div>'+
+        '<div class="actions"><button class="btn ghost" id="sback">Undo</button><button class="btn ghost" id="sclear">Clear</button></div>';
+      $$('.tile',root).forEach(function(b){b.addEventListener('click',function(){
+        ans.push(+b.dataset.i);draw(it);if(ans.length===word.length)check(it);
+      })});
+      $('#sback',root).addEventListener('click',function(){ans.pop();draw(it)});
+      $('#sclear',root).addEventListener('click',function(){ans=[];draw(it)});
+    }
+    function check(it){
+      var guess=ans.map(function(i){return tiles[i]}).join(''),fb=$('#sfb',root);
+      $$('.tile',root).forEach(function(b){b.disabled=true});
+      if(guess===word){
+        fb.className='fb good';fb.innerHTML='Tama! <b>'+word+'</b>';
+        var last=idx===list.length-1,btn=document.createElement('button');btn.className='btn';btn.textContent=last?'Finish':'Next word';
+        btn.addEventListener('click',function(){if(last){finish()}else{idx++;load()}});
+        $('.actions',root).appendChild(btn);btn.focus();
+      }else{fb.className='fb try';fb.textContent='Close! Tap Clear and try again.'}
+    }
+    function finish(){
+      stamp('wordlab');
+      root.innerHTML='<div class="fb good">Nice work! You unscrambled all the words.</div><div class="actions"><button class="btn ghost" id="snew">Play again</button></div>';
+      $('#snew',root).addEventListener('click',start);
+    }
+    start();
+  })();
+
+
+  /* ---------- effects: sound, confetti, vibration (respects reduced motion) ---------- */
+  (function(){
+    var calm=matchMedia('(prefers-reduced-motion: reduce)').matches,ac=null,on=true,px=innerWidth/2,py=innerHeight/2,snap=null;
+    try{on=localStorage.getItem('inspireSound')!=='off'}catch(e){}
+    function tone(f,t,d,w){if(!on)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();var o=ac.createOscillator(),g=ac.createGain(),s=ac.currentTime+t;o.type=w||'triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.15,s+.01);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g);g.connect(ac.destination);o.start(s);o.stop(s+d+.03)}catch(e){}}
+    function vib(p){try{if(on&&navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+    function burst(x,y,n,rain){if(calm)return;var cols=['#F2B01E','#0F3C9E','#FF5C8A','#2ED47A','#FFFFFF','#FF8A3D'];
+      for(var i=0;i<n;i++){var p=document.createElement('i'),z=6+Math.random()*7,dx=(Math.random()-.5)*(rain?160:260),dy=rain?innerHeight+40:-(60+Math.random()*140);
+        p.style.cssText='position:fixed;left:'+(rain?Math.random()*innerWidth:x)+'px;top:'+(rain?-14:y)+'px;width:'+z+'px;height:'+z*.6+'px;background:'+cols[i%6]+';border-radius:2px;pointer-events:none;z-index:99';
+        document.body.appendChild(p);
+        p.animate(rain?[{transform:'none'},{transform:'translate('+dx+'px,'+dy+'px) rotate(700deg)'}]:[{transform:'none',opacity:1},{transform:'translate('+dx/2+'px,'+dy+'px) rotate(200deg)',opacity:1,offset:.45},{transform:'translate('+dx+'px,'+(dy+260)+'px) rotate(500deg)',opacity:0}],
+          {duration:rain?1800+Math.random()*1200:900,delay:rain?Math.random()*600:0,easing:'ease-out',fill:'forwards'}).onfinish=(function(e){return function(){e.remove()}})(p)}}
+    function n(sel){return document.querySelectorAll(sel).length}
+    document.addEventListener('pointerdown',function(e){px=e.clientX;py=e.clientY},true);
+    document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#wordlab .opt,#wordlab .tile,#a-check .opt');
+      snap=b?{g:n('.good'),t:n('.try')}:null;
+      if(!snap)return;setTimeout(function(){
+        if(n('.good')>snap.g){tone(523,0,.12);tone(784,.09,.2);burst(px,py,16);vib(25)}
+        else if(n('.try')>snap.t){tone(230,0,.28,'sawtooth');vib([40,40,40])}},0)});
+    var _stamp=stamp;stamp=function(k){var fresh=!stamps[k];_stamp(k);if(fresh){[523,659,784,1047].forEach(function(f,i){tone(f,i*.11,.25)});burst(0,0,60,true);vib([60,40,100])}};
+    var sb=document.getElementById('sndTgl');
+    function up(){sb.textContent=on?'Sound: on':'Sound: off';sb.setAttribute('aria-pressed',on)}
+    sb.addEventListener('click',function(){on=!on;try{localStorage.setItem('inspireSound',on?'on':'off')}catch(e){}up();if(on){tone(660,0,.1);tone(990,.08,.18)}});up();
+  })();
+
   /* ---------- library ---------- */
   var LIB=[
-    {n:'e-TESDA',tag:'Free courses',d:'Free online skills courses from TESDA. Make an account, choose a course, and learn at your own pace. You get a certificate of completion after finishing a course. A National Certificate needs a face-to-face assessment.',tip:'Search words to try: free TESDA online courses',u:'https://e-tesda.gov.ph',l:'e-tesda.gov.ph'},
-    {n:'DepEd Learning Resource Portal',tag:'ALS and school',d:'DepEd’s online library of learning materials. ALS learners and teachers can look for modules and lessons here.',tip:'Search words to try: ALS learning resources',u:'https://lrmds.deped.gov.ph',l:'lrmds.deped.gov.ph'},
+    {n:'DepEd Learning Resource Portal',tag:'ALS and school',d:'DepEd’s online library of learning materials. ALS learners and teachers look for modules and lessons here.',tip:'Search words to try: ALS learning resources',u:'https://lrmds.deped.gov.ph',l:'lrmds.deped.gov.ph'},
     {n:'VOA Learning English',tag:'Listening',d:'News and stories told in simple English with audio and video. Beginner series include Let’s Learn English (with a quiz), News Words, and What’s Trending Today.',tip:'Try this: open a Beginner video, listen once, then read along.',u:'https://learningenglish.voanews.com',l:'learningenglish.voanews.com'},
     {n:'British Council LearnEnglish',tag:'Reading and tests',d:'Free English lessons, video series, and a short test to find your level.',tip:'Try this: take the "Test your English" quiz.',u:'https://learnenglish.britishcouncil.org/test-your-english',l:'learnenglish.britishcouncil.org'}
   ];
