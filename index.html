@@ -37,6 +37,14 @@ h1{font-size:clamp(1.9rem,7vw,2.8rem);font-weight:800;letter-spacing:-.01em}h2{f
 .row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;min-height:72px;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);text-align:left}
 .row .n{width:38px;height:38px;border-radius:10px;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;font-weight:600}
 .row strong{display:block;font-weight:600}.row small{display:block;color:var(--muted);font-size:.82rem;line-height:1.35}
+.row:disabled{opacity:.6;cursor:not-allowed;transform:none!important}.row:disabled .n{background:var(--line);color:var(--muted)}
+.wq{display:grid;gap:12px;justify-items:center;width:100%}.wq .hint{width:100%;max-width:30rem}
+.wq-row{display:flex;gap:6px;justify-content:center}
+.wq-c{width:min(14vw,54px);aspect-ratio:1;display:grid;place-items:center;border:2px solid var(--line);border-radius:10px;font-weight:700;font-size:1.4rem;text-transform:uppercase;background:var(--surface);color:var(--ink)}
+.wq-c.f{border-color:var(--primary)}
+.wq-c.c,.wq-k.c{background:#2E7D32;border-color:#2E7D32;color:#fff}.wq-c.p,.wq-k.p{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}.wq-c.a,.wq-k.a{background:var(--line);border-color:var(--line);color:var(--muted)}
+.wq-k{min-width:30px;min-height:46px;padding:0 9px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;font-size:.95rem}.wq-k:disabled{opacity:.4}
+.wq-kb{display:grid;gap:6px;width:100%;max-width:30rem}.wq-kb .wq-row{gap:4px}.wq-kb .wq-k{flex:1;min-width:0;padding:0 2px}
 .meta{display:grid;justify-items:end;gap:4px;font-size:.78rem;color:var(--muted);white-space:nowrap}
 .stars{display:inline-flex;flex-wrap:wrap;gap:2px}.star{display:inline-flex;width:20px;height:20px;color:var(--star-off)}.star.on{color:var(--gold)}.star svg{width:100%;height:100%;fill:currentColor}.big .star{width:34px;height:34px}
 .stage{display:grid;gap:16px}.intro{color:var(--muted)}
@@ -255,31 +263,64 @@ function materialsView(){
     h('button',{class:'link',type:'button',onclick:function(){go('games');}},'Looking for games? Open Games →'),h('div',{class:'field'},h('label',{for:'m-q'},'Search materials'),input),chips,count,
     h('p',{class:'hint'},'You need internet. Save a PDF on your phone to use it offline. Websites can change, so the facilitator checks the links before the session.'),list];}
 
-/* ---------- Online Games (modal list + iframe player) ---------- */
-var ES="https://www.esleschool.com/";
-/* u = link for "Open in new tab". e (optional) = link used inside the page (iframe), for games whose normal page blocks iframes. */
-var GROUPS=[{k:"vocab",t:"Vocabulary Games",d:"Spelling, word meanings, and word building."},{k:"grammar",t:"Grammar Games",d:"Choose the right word, find the mistake, put words in order."}];
+/* ---------- Fun Games (modal list + iframe player) ---------- */
+/* u = link for "Open in new tab". e = link used inside the page (iframe), for games whose normal page blocks iframes.
+   To add a game: copy one line, change the text, and paste the game's iframe link in e. */
+var GROUPS=[{k:"play",t:"Play Here",d:"Word games made for this hub. No internet needed."},{k:"vocab",t:"Vocabulary Games",d:"Spelling, word meanings, and word building."}];
 var GAMES=[
+{g:"play",t:"Word Quest",s:"Built-in",l:"Beginner",d:"Guess the hidden 5-letter word in six tries.",run:function(){return wordQuest();}},
+{g:"play",t:"Unscramble",s:"Built-in",l:"Beginner",d:"Put the letters in the right order to make the word.",run:function(){return unscramble();}},
 {g:"vocab",t:"Sushi Spell",s:"British Council",l:"All levels",d:"Spell as many words as you can in two minutes.",u:BC+"vocabulary/games/sushi-spell",e:"https://learnenglish.britishcouncil.org/nsassets/sushi-spell/sushi-spell2.html"},
-{g:"vocab",t:"Wordshake",s:"British Council",l:"All levels",d:"Make words from the letters. Longer words score more. Three minutes.",u:BC+"vocabulary/games/wordshake"},
-{g:"vocab",t:"Word Search",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Find hidden words in a letter grid.",u:ES+"word-search/"},
-{g:"vocab",t:"Flashcards",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Flip cards to learn and test word meanings.",u:ES+"flashcards/"},
-{g:"vocab",t:"Crossword",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Read the clue and type the word.",u:ES+"crossword/"},
-{g:"vocab",t:"Matching Pairs",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Match each word with its meaning.",u:ES+"matching-pairs/"},
-{g:"vocab",t:"Anagram",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Unscramble the letters to make the word.",u:ES+"anagram/"},
-{g:"vocab",t:"Word Detective",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Read the clue and guess the hidden word.",u:ES+"word-detective/"},
-{g:"vocab",t:"WordQuest",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Guess the hidden word in six tries.",u:ES+"wordquest/"},
-{g:"vocab",t:"BuzzWords",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Make words from seven letters. Use the centre letter.",u:ES+"buzzwords/"},
-{g:"grammar",t:"Grammar Snap",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Is the sentence correct or incorrect? Decide fast.",u:ES+"grammar-snap/"},
-{g:"grammar",t:"Gap Fill",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Choose the word that fits the gap.",u:ES+"gap-fill/"},
-{g:"grammar",t:"Spot the Mistake",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Find the mistake and choose the correction.",u:ES+"spot-the-mistake/"},
-{g:"grammar",t:"Sentence Scramble",s:"ESLeSchool",l:"Pre-A1 to B1",d:"Tap the words into the correct order.",u:ES+"sentence-scramble/"}
+{g:"vocab",t:"Wordshake",s:"British Council",l:"All levels",d:"Make words from the letters. Longer words score more. Three minutes.",u:BC+"vocabulary/games/wordshake",e:"https://learnenglish.britishcouncil.org/nsassets/wordshake-adults/Wordshake_Adult.html"}
 ];
+
+/* ---------- Built-in games (no internet needed). To add words: copy a line in WORDS: [word, English hint, Filipino help]. Word Quest needs 5-letter words. ---------- */
+var WORDS=[["apple","A red or green fruit.","mansanas"],["bread","You eat it for breakfast. It is made from flour.","tinapay"],["chair","You sit on it.","upuan"],["clock","It shows the time.","orasan"],["dream","You see it when you sleep.","panaginip"],["early","Not late.","maaga"],["earth","The planet we live on.","lupa"],["field","A large open area of grass.","bukid"],["green","The colour of leaves.","berde"],["happy","You feel good and smile.","masaya"],["house","A place where a family lives.","bahay"],["learn","To get new knowledge.","matuto"],["money","You use it to buy things.","pera"],["music","You listen to songs.","musika"],["night","It is dark. You sleep.","gabi"],["paper","You write on it.","papel"],["phone","You call and text with it.","telepono"],["plant","A small living thing that grows in soil.","halaman"],["quiet","Not noisy.","tahimik"],["ready","Prepared to start.","handa"],["river","Water that flows to the sea.","ilog"],["skill","Something you can do well.","kasanayan"],["sleep","You do this at night.","matulog"],["small","Not big.","maliit"],["smile","You do this when you are happy.","ngiti"],["sound","You hear it.","tunog"],["speak","To say words.","magsalita"],["start","To begin.","magsimula"],["store","A place to buy things.","tindahan"],["story","Something you read or tell.","kuwento"],["study","To learn from books or lessons.","mag-aral"],["table","You put food or books on it.","mesa"],["think","Use your mind.","mag-isip"],["truck","A big vehicle for heavy things.","trak"],["water","You drink it.","tubig"],["write","Use a pen to make words.","magsulat"],["class","A group of students and a teacher.","klase"],["email","A message you send on the internet.","e-mail"],["login","Enter your account.","pumasok sa account"],["apply","Ask for a job or a place.","mag-apply"],["offer","To give a chance or a thing.","alok"],["shift","Your working hours.","oras ng trabaho"]];
+function wordQuest(){
+  var t=WORDS[Math.floor(Math.random()*WORDS.length)],ans=t[0].toUpperCase(),guesses=[],cur='',over=false,msg='',showTl=false,ks={},wrap=h('div',{class:'wq'});
+  function score(g){var res=[],left={},i;for(i=0;i<5;i++){if(g[i]===ans[i])res[i]='c';else left[ans[i]]=(left[ans[i]]||0)+1;}
+    for(i=0;i<5;i++){if(res[i])continue;if(left[g[i]]>0){res[i]='p';left[g[i]]--;}else res[i]='a';}return res;}
+  function rk(x){return x==='c'?3:x==='p'?2:1;}
+  function press(k){if(over)return;
+    if(k==='ENTER'){if(cur.length<5){msg='Type 5 letters first.';draw();return;}
+      var r=score(cur);guesses.push({g:cur,r:r});for(var i=0;i<5;i++){var c=cur[i];if(!ks[c]||rk(r[i])>rk(ks[c]))ks[c]=r[i];}
+      if(cur===ans){over=true;msg='Correct! The word is '+t[0]+'. Great job!';}else if(guesses.length>=6){over=true;msg='The word was '+t[0]+'. Try again!';}else msg='';cur='';}
+    else if(k==='⌫'){cur=cur.slice(0,-1);}else if(cur.length<5){cur+=k;msg='';}
+    draw();}
+  function draw(){
+    var rows=[];for(var r=0;r<6;r++){var g=guesses[r],txt=g?g.g:(r===guesses.length?cur:'');
+      rows.push(h('div',{class:'wq-row'},[0,1,2,3,4].map(function(i){return h('span',{class:'wq-c'+(g?' '+g.r[i]:txt[i]?' f':'')},txt[i]||'');})));}
+    var kb=['QWERTYUIOP','ASDFGHJKL','ENTER ZXCVBNM ⌫'].map(function(row){return h('div',{class:'wq-row'},row.split(' ').join('').length&&(row.indexOf('ENTER')===0?['ENTER'].concat('ZXCVBNM'.split(''),['⌫']):row.split('')).map(function(k){return h('button',{type:'button',class:'wq-k'+(ks[k]?' '+ks[k]:''),disabled:over,onclick:function(e){e.currentTarget.blur();press(k);}},k);}));});
+    put(wrap,h('p',{class:'hint'},'Guess the 5-letter word in 6 tries. Green = right place. Gold = in the word, wrong place. Hint: '+t[1]+(showTl?' ('+t[2]+')':'')),
+      h('div',{class:'btns'},h('button',{class:'btn ghost small',type:'button',onclick:function(){showTl=!showTl;draw();}},showTl?'Hide Filipino help':'Tulong (Filipino)')),
+      h('div',{class:'wq-board'},rows),h('div',{class:'feedback '+(over?(cur===''&&guesses.length&&guesses[guesses.length-1].g===ans?'good':'bad'):'info'),'aria-live':'polite'},msg),
+      over?h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){wrap.replaceWith(wordQuest());}},'Play again')):null,
+      h('div',{class:'wq-kb'},kb));}
+  function kh(e){if(!wrap.isConnected){document.removeEventListener('keydown',kh);return;}if(e.ctrlKey||e.metaKey||e.altKey||(e.target&&e.target.tagName==='BUTTON'))return;
+    if(e.key==='Enter')press('ENTER');else if(e.key==='Backspace')press('⌫');else if(/^[a-z]$/i.test(e.key))press(e.key.toUpperCase());}
+  document.addEventListener('keydown',kh);draw();return wrap;}
+function unscramble(){
+  var pool=shuffle(WORDS).slice(0,6),ri=0,earned=0,wrap=h('div',{class:'wq'});
+  function round(){
+    var t=pool[ri],ans=t[0].toUpperCase(),letters=shuffle(ans.split('')),tries=0;if(letters.join('')===ans)letters=letters.reverse();
+    var used=[],msg='',solved=false,showTl=false;
+    function draw(){
+      var slots=h('div',{class:'wq-row'},ans.split('').map(function(_,i){return h('span',{class:'wq-c'+(solved?' c':used[i]!==undefined?' f':'')},used[i]!==undefined?letters[used[i]]:'');}));
+      var tiles=h('div',{class:'wq-row'},letters.map(function(L,i){return h('button',{type:'button',class:'wq-k',disabled:solved||used.indexOf(i)>=0,onclick:function(){used.push(i);msg='';
+        if(used.length===ans.length){var w=used.map(function(j){return letters[j];}).join('');if(w===ans){solved=true;if(!tries)earned++;msg='Correct! '+t[0]+' = '+t[2]+'.';}else{tries++;used=[];msg='Not yet. Try again.';}}draw();}},L);}));
+      wrap.replaceChildren(h('div',{class:'toolrow'},h('span',{class:'count'},'Word '+(ri+1)+' of '+pool.length),h('button',{class:'btn ghost small',type:'button',onclick:function(){showTl=!showTl;draw();}},showTl?'Hide Filipino help':'Tulong (Filipino)')),
+        h('p',{class:'hint'},'Tap the letters in the right order. Hint: '+t[1]+(showTl?' ('+t[2]+')':'')),slots,tiles,
+        h('div',{class:'feedback '+(solved?'good':tries?'bad':'info'),'aria-live':'polite'},msg),
+        h('div',{class:'btns'},solved?h('button',{class:'btn',type:'button',onclick:function(){if(ri<pool.length-1){ri++;round();}else end();}},ri<pool.length-1?'Next word':'See my score'):null,
+          !solved?h('button',{class:'btn ghost small',type:'button',onclick:function(){used.pop();draw();}},'⌫ Undo'):null,!solved?h('button',{class:'btn ghost small',type:'button',onclick:function(){used=[];draw();}},'Clear'):null));}
+    draw();}
+  function end(){wrap.replaceChildren(h('div',{class:'done'},h('h2',null,'Well done!'),h('p',null,'You got '+earned+' of '+pool.length+' words on the first try.'),h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){wrap.replaceWith(unscramble());}},'Play again'))));}
+  round();return wrap;}
 var gmEl=null,gmKey=null;
 function gmClose(){if(gmEl){gmEl.remove();gmEl=null;}document.body.style.overflow='';if(gmKey){document.removeEventListener('keydown',gmKey);gmKey=null;}}
 function gmOpen(g,game){
   stopAudio();
-  if(!gmEl){gmEl=h('div',{class:'gm-ov',role:'dialog','aria-modal':'true','aria-label':'Online games'});
+  if(!gmEl){gmEl=h('div',{class:'gm-ov',role:'dialog','aria-modal':'true','aria-label':'Fun games'});
     gmEl.addEventListener('click',function(e){if(e.target===gmEl)gmClose();});document.body.appendChild(gmEl);document.body.style.overflow='hidden';
     gmKey=function(e){if(e.key==='Escape')gmClose();};document.addEventListener('keydown',gmKey);}
   var grp=GROUPS.filter(function(x){return x.k===g;})[0],box;
@@ -287,6 +328,9 @@ function gmOpen(g,game){
     var items=GAMES.filter(function(m){return m.g===g;}).map(function(m){return h('button',{class:'row',type:'button',onclick:function(){gmOpen(g,m);}},h('span',{class:'n'},'▶'),h('span',null,h('strong',null,m.t),h('small',null,m.d)),h('span',{class:'meta'},h('span',null,m.s)));});
     box=h('div',{class:'gm-box'},h('div',{class:'gm-top'},h('h2',null,grp.t),h('button',{class:'btn small',type:'button',onclick:gmClose},'Close')),
       h('div',{class:'gm-body'},h('p',{class:'hint'},'Tap a game to play it here. If the screen stays blank, tap Open in new tab inside the game.'),items));
+  }else if(game.run){
+    box=h('div',{class:'gm-box'},h('div',{class:'gm-top'},h('button',{class:'btn ghost small',type:'button',onclick:function(){gmOpen(g);}},'← Games'),h('strong',null,game.t),
+      h('span',{class:'gm-act'},h('button',{class:'btn small',type:'button',onclick:gmClose},'Close'))),h('div',{class:'gm-body'},game.run()));
   }else{
     var fr=h('iframe',{class:'gm-frame',src:game.e||game.u,title:game.t,allow:'fullscreen; autoplay',sandbox:'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-pointer-lock'});
     box=h('div',{class:'gm-box'},h('div',{class:'gm-top'},h('button',{class:'btn ghost small',type:'button',onclick:function(){gmOpen(g);}},'← Games'),h('strong',null,game.t),
@@ -297,7 +341,7 @@ function gamesView(){
   var cards=GROUPS.map(function(g){var n=GAMES.filter(function(m){return m.g===g.k;}).length;
     return h('section',{class:'card'+(g.k==='grammar'?' cream':'')},h('span',{class:'kicker'},n+' games'),h('h2',null,g.t),h('p',null,g.d),
       h('div',{class:'btns'},h('button',{class:'btn'+(g.k==='grammar'?' gold':''),type:'button',onclick:function(){gmOpen(g.k);}},'Open '+g.t)));});
-  return [header('Online Games','Free English Games','Pick a group, choose a game, and play right here.'),
+  return [header('Fun Games','Free English Games','Pick a group, choose a game, and play right here.'),
     h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← Home'),
     h('p',{class:'hint'},'You need internet. If a game stays blank, tap Open in new tab. The facilitator tests the games before the session.'),h('div',{class:'cards'},cards)];}
 function homeView(){
@@ -306,13 +350,13 @@ function homeView(){
       h('h2',null,ses.title),h('p',null,ses.blurb),
       h('ul',null,ses.activities.map(function(act,ai){var p=progress[key(si,ai)];return h('li',null,h('span',null,act.title),p?stars(p.earned,p.total):h('span',{class:'count'},act.minutes+' min'));})),
       h('div',{class:'btns'},h('button',{class:'btn'+(si%2?' gold':''),type:'button',onclick:function(){go('session',si);}},'Open activities')));});
-  cards.push(h('section',{class:'card cream'},h('span',{class:'kicker'},'Play more'),h('h2',null,'Online Games'),h('p',null,'Free vocabulary and grammar games. Play right here.'),h('div',{class:'btns'},h('button',{class:'btn gold',type:'button',onclick:function(){go('games');}},'Open Games'))));
   cards.push(h('section',{class:'card'},h('span',{class:'kicker'},'After the training'),h('h2',null,'Free Materials & Worksheets'),h('p',null,'Search free reading, listening, grammar and worksheet links you can use anytime.'),h('div',{class:'btns'},h('button',{class:'btn',type:'button',onclick:function(){go('materials');}},'Open Materials'))));
+  cards.push(h('section',{class:'card cream'},h('span',{class:'kicker'},'Play more'),h('h2',null,'Fun Games'),h('p',null,'Free word games. Play right here.'),h('div',{class:'btns'},h('button',{class:'btn gold',type:'button',onclick:function(){go('games');}},'Open Games'))));
   return [header('Project INSPIRE',CONTENT.home.title,CONTENT.home.text),h('div',{class:'cards'},cards)];}
 function sessionView(ses){
-  var rows=ses.activities.map(function(act,ai){var p=progress[key(state.s,ai)];
-    return h('button',{class:'row',type:'button',onclick:function(){go('activity',state.s,ai);}},
-      h('span',{class:'n'},String(ai+1)),h('span',null,h('strong',null,act.title),h('small',null,act.blurb)),
+  var rows=ses.activities.map(function(act,ai){var p=progress[key(state.s,ai)],locked=ai>0&&!progress[key(state.s,ai-1)];
+    return h('button',{class:'row',type:'button',disabled:locked,onclick:function(){go('activity',state.s,ai);}},
+      h('span',{class:'n'},locked?'🔒':String(ai+1)),h('span',null,h('strong',null,act.title),h('small',null,locked?'Finish “'+ses.activities[ai-1].title+'” first.':act.blurb)),
       h('span',{class:'meta'},h('span',null,act.minutes+' min'),p?stars(p.earned,p.total):null));});
   return [header(CONTENT.home.title,ses.title,ses.blurb),h('button',{class:'link',type:'button',onclick:function(){go('home');}},'← Home'),tipBox(ses.tip),h('div',{class:'rows'},rows)];}
 var RUNNERS={};
