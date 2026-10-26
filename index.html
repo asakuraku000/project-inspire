@@ -165,10 +165,29 @@ iframe.embed{display:block;width:100%;height:calc(100dvh - 100px);border:0;borde
 .tab[aria-current="page"]{background:var(--soft);color:var(--accent)}
 @media (min-width:640px){.route{grid-template-columns:1fr 1fr}.route .wide{grid-column:1/-1}}
 @media (prefers-reduced-motion:no-preference){.opt,.btn,.chip{transition:background .15s,border-color .15s}
-  #fun.on{animation:funIn .4s ease-out both}}
+}
 @keyframes funIn{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.93)}60%{transform:translateY(-5px) scale(1.02)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* Same visit animation on every tab: .vis is added for ~1.6s each time a tab is opened */
+@media (prefers-reduced-motion:no-preference){
+  section.view.vis>*:not(iframe){animation:rise .55s both}
+  section.view.vis>*:nth-child(2){animation-delay:.05s}section.view.vis>*:nth-child(3){animation-delay:.1s}
+  section.view.vis>*:nth-child(4){animation-delay:.15s}section.view.vis>*:nth-child(5){animation-delay:.2s}
+  section.view.vis .stack>*,section.view.vis .route>*{animation:rise .6s both}
+  section.view.vis .stack>*:nth-child(2),section.view.vis .route>*:nth-child(2){animation-delay:.1s}
+  section.view.vis .stack>*:nth-child(3),section.view.vis .route>*:nth-child(3){animation-delay:.18s}
+  section.view.vis .stack>*:nth-child(4),section.view.vis .route>*:nth-child(4){animation-delay:.26s}
+  section.view.vis .stack>*:nth-child(n+5),section.view.vis .route>*:nth-child(n+5){animation-delay:.34s}
+  section.view.vis .rule{transform-origin:left;animation:grow .7s .2s both}
+  section.view.vis>iframe{animation:funIn .4s ease-out both}
+}
+/* orange loading bar */
+#loadbar{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:5px;width:0;opacity:0;background:#FF7A00;
+  box-shadow:0 0 10px rgba(255,122,0,.7);border-radius:0 3px 3px 0;z-index:60;pointer-events:none}
 </style>
 
+<div id="loadbar" aria-hidden="true"></div>
 <div class="wrap">
   <div class="topbar"><span class="brand">Project INSPIRE &middot; Language for Life</span></div>
 
@@ -880,7 +899,7 @@ render();
 &lt;script&gt;
 (function(){
 &#x27;use strict&#x27;;
-var app=document.getElementById(&#x27;app&#x27;); if(!app||window.__START!==&#x27;fun&#x27;) return;
+var app=document.getElementById(&#x27;app&#x27;); if(!app||(window.__START!==&#x27;fun&#x27;&amp;&amp;window.__START!==&#x27;materials&#x27;)) return;
 var on=true; try{on=localStorage.getItem(&#x27;inspireSound&#x27;)!==&#x27;off&#x27;}catch(e){}
 var calm=matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;).matches;
 var ac=null, combo=0, px=innerWidth/2, py=innerHeight/2, snap=null, tEl=null;
@@ -921,7 +940,7 @@ function unlock(){
   return ac;
 }
 function tone(f,t,d,type,v,f2){
-  if(!on) return; var a=unlock(); if(!a) return;
+  if(!on||window.__START===&#x27;materials&#x27;) return; var a=unlock(); if(!a) return;
   var o=a.createOscillator(), g=a.createGain(), s=a.currentTime+t;
   o.type=type||&#x27;sine&#x27;; o.frequency.setValueAtTime(f,s);
   if(f2) o.frequency.exponentialRampToValueAtTime(f2,s+d);
@@ -1007,7 +1026,7 @@ function sndBtn(){
   });
   up(); return b;
 }
-function ensureBtn(){
+function ensureBtn(){ if(window.__START===&#x27;materials&#x27;) return;
   document.querySelectorAll(&#x27;.tools&#x27;).forEach(function(t){ if(!t.querySelector(&#x27;.fxsnd&#x27;)) t.prepend(sndBtn()); });
 }
 new MutationObserver(function(ms){
@@ -1064,14 +1083,30 @@ ensureBtn();
   /* ---------- routing ---------- */
   var VIEWS=['home','lab','wordlab','library','materials','fun'];
   var IDX=null;
-  function lazyFrame(v){var f=document.getElementById('frame-'+v);if(!f||f.srcdoc)return;IDX=IDX||document.getElementById('idxsrc').value;
-    f.srcdoc=IDX.replace('<div id="app" class="shell"></div>','<script>window.__START="'+v+'"<\/script><div id="app" class="shell"></div>')}
+  function lazyFrame(v){var f=document.getElementById('frame-'+v);if(!f||f.srcdoc)return false;IDX=IDX||document.getElementById('idxsrc').value;
+    return !!(f.srcdoc=IDX.replace('<div id="app" class="shell"></div>','<script>window.__START="'+v+'"<\/script><div id="app" class="shell"></div>'))}
+  var bar=document.getElementById('loadbar'),barT=null;
+  function loadBar(fr,fresh){
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    clearTimeout(barT);
+    bar.style.transition='none';bar.style.opacity='1';bar.style.width='0';void bar.offsetWidth;
+    bar.style.transition='width .7s ease-out';bar.style.width='70%';
+    var fin=function(){bar.style.transition='width .25s ease-out,opacity .35s ease .25s';bar.style.width='100%';bar.style.opacity='0'};
+    if(fr&&fresh){
+      var f=function(){fr.removeEventListener('load',f);clearTimeout(barT);barT=setTimeout(fin,150)};
+      fr.addEventListener('load',f);barT=setTimeout(fin,4000);
+    }else barT=setTimeout(fin,700);
+  }
   function route(){
-    var h=(location.hash||'#home').slice(1);if(h==='play')h='fun';if(VIEWS.indexOf(h)<0)h='home';lazyFrame(h);
+    var h=(location.hash||'#home').slice(1);if(h==='play')h='fun';if(VIEWS.indexOf(h)<0)h='home';var fresh=lazyFrame(h);
     VIEWS.forEach(function(v){$('#'+v).classList.toggle('on',v===h)});
     $$('.tab').forEach(function(t){if(t.dataset.tab===h)t.setAttribute('aria-current','page');else t.removeAttribute('aria-current')});
     if(h!=='lab'&&window.speechSynthesis){try{speechSynthesis.cancel()}catch(e){}resetListen()}
-    if(h==='fun'){try{var ff=document.getElementById('frame-fun');if(ff.contentWindow)ff.contentWindow.postMessage('inspire:replay','*')}catch(e){}}
+    var sec=$('#'+h),fr=document.getElementById('frame-'+h);
+    sec.classList.remove('vis');void sec.offsetWidth;sec.classList.add('vis');
+    clearTimeout(sec._t);sec._t=setTimeout(function(){sec.classList.remove('vis')},1600);
+    if(fr&&!fresh){try{fr.contentWindow.postMessage('inspire:replay','*')}catch(e){}}
+    loadBar(fr,fresh);
     window.scrollTo(0,0);
   }
   window.addEventListener('hashchange',route);
